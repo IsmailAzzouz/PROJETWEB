@@ -1,0 +1,28 @@
+{%extends "BASE.html"%}
+{% load static %}
+{% block content %}
+
+    <p>login</p>
+ <form method="POST">
+
+        {% csrf_token %}
+        <fieldset class="form-elemnt">
+            <legend class="">yes</legend>
+            {{ form.as_p}}
+
+        </fieldset>
+        <div class="form-button">
+            <button class="btn" type="submit">yep</button>
+        </div>
+
+    </form>
+    <div class="already">
+
+        <small class="text au cas ou">already account ?
+        <a href="{% url 'register' %}">sign in</a>
+
+        </small>
+
+    </div>
+</div>
+{% endblock %}

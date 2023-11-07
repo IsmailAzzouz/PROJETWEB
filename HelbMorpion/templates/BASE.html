@@ -1,0 +1,57 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/global.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}">
+
+    {% if title %}
+    <title>HelbMorpion | {{title}}</title>
+    {%else%}
+    <title>HelbMorpion</title>
+    {%endif%}
+</head>
+<body>
+
+<div class="nav-barre">
+    <a class="helbmorpion" href="{% url 'morpion-home' %}">HELBMORPION</a>
+    <div class="midlinks"><a class="play" href="{% url 'morpion-home' %}">Play</a>
+        <a class="score-board" href="{% url 'morpion-home' %}">Score-Board</a>
+        <a class="about" href="{% url 'morpion-home' %}">About</a>
+        <a class="contact" href="{% url 'morpion-home' %}">Contact</a>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="leftlinks"><a class="loginsignin" id="loginSignIn" href="{% url 'logout' %}">Log-Out</a>
+        <a href="{% url 'profile' %}">Profile</a></div>
+    {% else %}
+    <a class="leftlinks" id="loginSignIn" href="{% url 'login' %}">Log-in/Sign-In</a>
+    {% endif %}
+
+</div>
+
+
+
+
+
+</div>
+<br>
+{% if messages %}
+{% for message in messages %}
+<div>
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% block content%}
+#code override
+{% endblock%}
+</body>
+</html>

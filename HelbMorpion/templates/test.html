@@ -1,0 +1,178 @@
+<link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
+/>
+<style>
+    html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden
+    }
+
+    .nav-barre {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px 0 10px;
+    }
+
+    .helbmorpion {
+        /* You can add styling for the left element if needed */
+    }
+
+    .midlinks {
+        display: flex;
+        justify-content: center;
+    }
+
+    .right-links {
+        display: flex;
+        align-items: center;
+    }
+
+
+    body {
+        background-image: url("../static/IMG/background@2x.png");
+        background-size: cover;
+
+    }
+
+    :root {
+        /* fonts */
+        --font-inter: Inter;
+
+        /* font sizes */
+        --font-size-mini: 0.94rem;
+
+        /* Colors */
+        --color-white: #fff;
+    }
+
+    a {
+        color: white;
+    }
+    .container {
+        color: var(--color);
+        font-size: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .right {
+        text-align: right;
+        width: 100%;
+    }
+
+    .stack {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .stack span {
+        font-weight: bold;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        font-size: 4rem;
+        --stack-height: calc(100% / var(--stacks) - 1px);
+        --inverse-index: calc(calc(var(--stacks) - 1) - var(--index));
+        --clip-top: calc(var(--stack-height) * var(--index));
+        --clip-bottom: calc(var(--stack-height) * var(--inverse-index));
+        clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
+        animation: stack 340ms cubic-bezier(.46,.29,0,1.24) 1 backwards calc(var(--index) * 120ms), glitch 2s ease infinite 2s alternate-reverse;
+    }
+
+    .stack span:nth-child(odd) { --glitch-translate: 8px; }
+    .stack span:nth-child(even) { --glitch-translate: -8px; }
+
+    @keyframes stack {
+        0% {
+            opacity: 0;
+            transform: translateX(-50%);
+            text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
+        };
+    60% {
+        opacity: 0.5;
+        transform: translateX(50%);
+    }
+    80% {
+        transform: none;
+        opacity: 1;
+        text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
+    }
+    100% {
+        text-shadow: none;
+    }
+    }
+
+    @keyframes glitch {
+        0% {
+            text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
+            transform: translate(var(--glitch-translate));
+        }
+        2% {
+            text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
+        }
+        4%, 100% {  text-shadow: none; transform: none; }
+    }
+    .container{
+        color: white;
+    }
+    .tester{  animation: .8s shake infinite alternate;
+        background-image: linear-gradient(45deg,
+        #7794ff,
+        #44107A,
+        #FF1361,
+        #FFF800);
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        font-size: 10vw;
+        font-weight: 900;
+        text-decoration: none;
+        color: white;
+        display: inline-block;
+        background-size: 120% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -moz-background-clip: text;
+        -moz-text-fill-color: transparent;
+        -ms-background-clip: text;
+        -ms-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+
+    @keyframes shake {
+        0% { transform: skewX(-15deg); }
+        5% { transform: skewX(15deg); }
+        10% { transform: skewX(-15deg); }
+        15% { transform: skewX(15deg); }
+        20% { transform: skewX(0deg); }
+        100% { transform: skewX(0deg); }
+    }
+</style>
+<body>
+<div class="nav-barre">
+    <a class="helbmorpion" href="#">HELBMORPION</a>
+    <div class="midlinks"><a class="play" href="#">Play</a>
+        <a class="score-board" href="#">Score-Board</a>
+        <a class="about" href="#">About</a>
+        <a class="contact" href="#">Contact</a>
+    </div>
+
+    <div class="leftlinks"><a class="loginsignin" id="loginSignIn" href="{% url 'logout' %}">logout</a>
+        <a href="{% url 'profile' %}">profile</a></div>
+
+
+</div>
+<div class="container">
+    Xs and Os who will
+    <div class="stack" style="--stacks: 3;">
+        <span style="--index: 0;">TRHIUMP</span>
+        <span style="--index: 1;">TRHIUMP</span>
+        <span style="--index: 2;">TRHIUMP</span>
+    </div>
+    <span class="right">Developer</span>
+</div>
+<div class="tester"><h1>on met du text</h1></div>
+</body>
