@@ -13,15 +13,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/global.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}">
 
-    {% if title %}
-    <title>HelbMorpion | {{title}}</title>
-    {%else%}
-    <title>HelbMorpion</title>
-    {%endif%}
+    <title>HELBMOPRION | {% block title %}{% endblock %}</title>
 </head>
 <body>
 
 <div class="nav-barre">
+
     <a class="helbmorpion" href="{% url 'morpion-home' %}">HELBMORPION</a>
     <div class="midlinks"><a class="play" href="{% url 'morpion-home' %}">Play</a>
         <a class="score-board" href="{% url 'morpion-home' %}">Score-Board</a>
@@ -42,7 +39,7 @@
 
 
 </div>
-<br>
+
 {% if messages %}
 {% for message in messages %}
 <div>
@@ -53,5 +50,12 @@
 {% block content%}
 #code override
 {% endblock%}
+<!--!>
+ <div class="footer">
+    <div class="footer-content">
+      <p>&copy; 2023 Helb Morpion</p>
+
+    </div>
+  </div>-->
 </body>
 </html>

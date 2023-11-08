@@ -3,67 +3,53 @@ p, a {
     color: white;
 }
 
+.Main-Content{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    position: sticky;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+   /* top: 50%;*/
+    height: 91.5vh;
+    overflow: hidden;
 
+}
 .xs-and-os {
     margin: 0;
 }
 
 .catchphrase,
 .xs-and-os-container {
-    position: absolute;
-    left: calc(50% - 415px);
+    /*position: absolute;*/
+    /*left: calc(50% - 415px);*/
     width: 51.88rem;
     height: 14rem;
 }
 
 .xs-and-os-container {
     margin: 0;
-    top: calc(50% - 112px);
+    /*top: calc(50% - 112px);*/
     font-size: inherit;
     font-weight: 700;
     font-family: inherit;
-    display: inline-block;
+    /*display: inline-block;*/
 }
 
 .catchphrase {
-    top: calc(50% - 165px);
+    /*top: calc(50% - 165px);*/
 
     text-align: center;
     font-size: 5.31rem;
-    position: absolute;
+    /*position: absolute;*/
+    position: inherit;
 }
 
 
-.bt-letsplay-child {
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-    background-color: #b77fe3;
-    position: absolute;
-    top: 0;
-    left: calc(50% - 123px);
-    border-radius: 50px;
-    width: 15.38rem;
-    height: 4.31rem;
-}
 
-.lets-play {
-    position: absolute;
-    top: 1.25rem;
-    left: 3.63rem;
-}
 
-.bt-letsplay {
-    position: absolute;
-    top: 34.38rem;
-    left: calc(50% - 123px);
 
-    width: 15.38rem;
-    height: 4.31rem;
-    cursor: pointer;
-    font-size: 1.56rem;
-    color: #fbfbff;
-}
 
 .homepage {
     position: relative;
@@ -77,17 +63,14 @@ p, a {
     font-family: var(--font-inter);
 }
 
-.bt-letsplay-child :hover {
-
-}
 
 .wrapper {
     display: flex;
     justify-content: center;
     font-family: Inter;
-    position: absolute;
-    top: 34.38rem;
-    left: calc(50% - 212px);
+    /*position: absolute;*/
+    /*top: 40rem;*/
+   /* left: calc(50% - 212px);*/
 }
 
 .wrapper span {
@@ -180,3 +163,6 @@ path.two {
         fill: white;
     }
 }
+
+/****************************************************/
+
