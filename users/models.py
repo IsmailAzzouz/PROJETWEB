@@ -16,7 +16,14 @@ class Profile(models.Model):
 
         img = Image.open(self.image.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
+        if img.height > 512 or img.width > 512:
+            new_width = min(img.width, 512)
+            new_height = min(img.height, 512)
+
+            left = (img.width - new_width) / 2
+            top = (img.height - new_height) / 2
+            right = (img.width + new_width) / 2
+            bottom = (img.height + new_height) / 2
+
+            img = img.crop((left, top, right, bottom))
             img.save(self.image.path)

@@ -1,0 +1,119 @@
+
+body{
+
+}
+.USER_PROFILE_PIC{
+    border-radius: 50%;
+    width: 60%;
+    padding: 10px;
+    filter: drop-shadow(-0.3vw  0.5vh 0px #ab20fd);
+}
+
+.Global-Frame{
+    display: flex;
+    width: 80%;
+    height: 75%;
+    position: sticky;
+    margin: auto;
+    padding: 10px;
+    top: calc(50% - 32.5%);
+    margin-top: 15%;
+    /*************************/
+
+}
+
+.Left-Subsection{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+border-color: white;
+    border-radius: 1px;
+    border-style: solid;
+background-color: #2e3234;
+}
+
+.User{
+    text-align: center;
+}
+
+.Right-navbarr{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+
+
+}
+.Right-navbarr a {
+    transition: ease-in-outs;
+    padding: 13px;
+
+}
+.Right-navbarr a:hover{
+    background-color: #b77fe3;
+}
+
+
+.Right-navbarr a:active{
+    background-color: #b77fe3;
+}
+
+.Right-Subsection{
+    display: flex;
+    width: calc(100% - 250px);
+    background-color: rgba(183, 127, 227, 0.58);
+    backdrop-filter: blur(10%);
+    border-top: white;
+border-right: white;
+border-bottom: white;
+    border-style: solid;
+    border-radius: 1px;
+    border-left: transparent;
+}
+
+.Profile{
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+
+}
+
+.User-Data{
+    display: flex;
+    flex-direction: row;
+text-align: center;
+padding:10px;
+    width: 100%;
+        justify-content: space-around;
+    font-size: 1.75vw;
+    height: fit-content;
+
+}
+
+.User-Data p{
+    height: fit-content;
+    margin: auto;
+    background-color: #2e3234;
+    border-radius: 30px;
+    width: calc(20% + 10px);
+    background-size: auto;
+    filter: drop-shadow(-0.3vw  0.5vh 0px #ab20fd);
+}
+.LastGamePlayed{
+    display: flex;
+    flex-direction: row;
+text-align: center;
+padding:10px;
+    width: 100%;
+        justify-content: space-around;
+}
+.UserPreferedSymbol{
+    display: flex;
+    flex-direction: row;
+text-align: center;
+padding:10px;
+    width: 100%;
+        justify-content: space-around;
+}

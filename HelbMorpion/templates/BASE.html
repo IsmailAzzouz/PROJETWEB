@@ -11,13 +11,16 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
     />
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/global.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}">
+    {% block css %}
+
+{% endblock %}
+
 
     <title>HELBMOPRION | {% block title %}{% endblock %}</title>
 </head>
 <body>
 
-<div class="nav-barre">
+<div class="nav-barre" style="color: white">
 
     <a class="helbmorpion" href="{% url 'morpion-home' %}">HELBMORPION</a>
     <div class="midlinks"><a class="play" href="{% url 'morpion-home' %}">Play</a>

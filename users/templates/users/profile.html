@@ -1,34 +1,134 @@
 {% extends "BASE.html" %}
 {% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/profile.css' %}">
+{% endblock %}
+
 {% block title %}
     PROFILE
 {% endblock %}
+
 {% block content %}
-
-
-    <div class="content-section">
-        <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
-            <div class="media-body">
-                <h2 style="color:white" class="account-heading">{{ user.username }}</h2>
-                <p class="text-secondary">{{ user.email }}</p>
-                <p class="text-secondary">Your Score : {{ user.profile.user_score }}</p>
-                <p class="text-secondary">Your Rank : {{ user.profile.user_rank }}</p>
-            </div>
+    <div class="Global-Frame">
+      <div class="Left-Subsection">
+        <article class="User">
+          <img
+            class="USER_PROFILE_PIC"
+            src="{{ user.profile.image.url }}"
+            alt="{{ user.username }}'s profile picture"
+          />
+          <h2 class="account-heading">{{ user.username }}</h2>
+        </article>
+        <div class="Right-navbarr">
+          <a href="#" onclick="showProfile()" id="profileid" class="test">Profile</a>
+          <a href="#" onclick="showModify()" id="hisotryid">History & Stats</a>
+          <a href="#" onclick="showStats()" id="modifyid">Modify Profile</a>
         </div>
-        <!-- FORM HERE -->
-        <form method="POST" enctype="multipart/form-data">
-
+      </div>
+      <div class="Right-Subsection">
+        <div class="Profile" id="Profile">
+          <article class="User-Data">
+            <p class="user-data-text">Rank: #{{ user.profile.user_rank }}</p>
+            <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
+            <p class="user-data-text">
+              Ratio : {{ user.profile.user_rank }}
+            </p>
+          </article>
+          <article class="LastGamePlayed">
+            <span>Game 1</span>
+            <span>Game 1</span>
+            <span>Game 1</span>
+          </article>
+          <article class="UserPreferedSymbol">
+            <ul>
+              <li><i class="fa fa-heart"></i>gagagaga</li>
+              <li><i class="fa fa-star"></i>agagagaga</li>
+              <li><i class="fa fa-flag"></i>agagagagag</li>
+              <li><i class="fa fa-circle"></i>agagagagag</li>
+            </ul>
+          </article>
+        </div>
+        <div class="Stats" id="StatsHistory" style="display: none">
+          <article class="User-Data">
+            <p class="user-data-text">Rank: {{ user.profile.user_rank }}</p>
+            <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
+            <p class="user-data-text">
+              Ratio : {{ user.profile.user_rank }}
+            </p>
+          </article>
+          <article class="LastGamePlayed">
+            <span>Game 1</span>
+            <span>Game 1</span>
+            <span>Game 1</span>
+          </article>
+          <article class="UserPreferedSymbol">
+            <ul>
+              <li><i class="fa fa-heart"></i></li>
+              <li><i class="fa fa-star"></i></li>
+              <li><i class="fa fa-flag"></i></li>
+              <li><i class="fa fa-circle"></i></li>
+            </ul>
+          </article>
+        </div>
+        <div class="ModifyProfile" id="Modify" style="display: none">
+          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <fieldset style="color:white" class="form-elemnt">
-                <legend class="">Profile Info</legend>
-                {{ user_form.as_p }}
-                {{ profile_form.as_p }}
-            </fieldset>
-            <div class="form-button">
-                <button class="btn" type="submit">Update</button>
-            </div>
 
-        </form>
+            <fieldset style="color: white" class="form-elemnt">
+              <legend class="">Profile Info</legend>
+
+              <label for="{{ user_form.username.id_for_label }}"
+                >Username:</label
+              >
+              {{ user_form.as_p }}
+              <!-- Repeat for other form fields -->
+
+              <label for="{{ profile_form.image.id_for_label }}"
+                >Profile Picture:</label
+              >
+              {{ profile_form.as_p }}
+              <!-- Repeat for other profile form fields -->
+            </fieldset>
+
+            <footer class="form-button">
+              <button class="btn" type="submit" aria-label="Update Profile">
+                Update
+              </button>
+            </footer>
+          </form>
+        </div>
+      </div>
     </div>
+    <script>
+    let Profile_select = document
+      .getElementById("profileid")
+      .addEventListener("click", showProfile);
+    let ModifyProfile_Select = document
+      .getElementById("modifyid")
+      .addEventListener("click", showModify);
+    let History_Select = document
+      .getElementById("hisotryid")
+      .addEventListener("click", showStats);
+    let ProfileSection = document.getElementById("Profile");
+    let StatsSection = document.getElementById("StatsHistory");
+    let ModifySection = document.getElementById("Modify");
+var links = document.querySelectorAll('.Right-navbarr a');
+    function showProfile() {
+      StatsSection.style.display = "none";
+      ModifySection.style.display = "none";
+      ProfileSection.style.display = "flex";
+
+    }
+    function showModify() {
+      StatsSection.style.display = "none";
+      ModifySection.style.display = "flex";
+      ProfileSection.style.display = "none";
+    }
+    function showStats() {
+      StatsSection.style.display = "flex";
+      ModifySection.style.display = "none";
+      ProfileSection.style.display = "none";
+    }
+  </script>
 {% endblock %}

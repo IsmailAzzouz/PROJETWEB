@@ -22,7 +22,7 @@ body {
     font-family: Inter;
 
     /* font sizes */
-
+color: white;
 
     --text-color: white;
 }
@@ -30,12 +30,11 @@ body {
 
 a {
     text-decoration: none;
-    color: black;
+    color: White;
 }
 
 .nav-barre {
     display: flex;
-    background-color: #18191b;
     justify-content: space-between;
     align-items: center;
     padding: 15px 10px 0 10px;
