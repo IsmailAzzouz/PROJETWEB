@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'HelbMorpion.apps.HelbmorpionConfig',
     'users.apps.UsersConfig',
-    'Game.apps.GameConfig',
 ]
 
 MIDDLEWARE = [
@@ -128,5 +127,5 @@ MEDIA_URL='/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_REDIRECT_URL='profile'
+LOGIN_REDIRECT_URL='morpion-home'
 LOGIN_URL='login'
