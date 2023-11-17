@@ -20,7 +20,7 @@ Installation
 Clone the repository to your local machine:
 bash
 Copy code
-git clone https://github.com/your-username/tic-tac-toe-webapp.git
+git clone https://github.com/IsmailAzzouz/PROJETWEB.git
 Open the project folder in your preferred text editor.
 
 Launch the index.html file in a web browser.
