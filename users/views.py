@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from Game.models import Game
 
 
 def register(request):
@@ -14,11 +15,12 @@ def register(request):
             return redirect('morpion-home')
     else:
         form = UserRegisterForm()
-    return render(request, 'users/register.html',{'form': form})
+    return render(request, 'users/register.html', {'form': form})
 
 
 @login_required()
 def profile(request):
+    games = Game.objects.all()
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
@@ -35,5 +37,7 @@ def profile(request):
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
+        'Games': games,
     }
-    return render(request, 'users/profile.html', context)
+
+    return render(request, 'users/profile.html', context, )

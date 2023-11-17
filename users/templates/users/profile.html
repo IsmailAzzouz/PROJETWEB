@@ -10,181 +10,186 @@
 {% endblock %}
 
 {% block content %}
+    
     <div class="Global-Frame">
-      <div class="Left-Subsection">
-        <article class="User">
-          <img
-            class="USER_PROFILE_PIC"
-            src="{{ user.profile.image.url }}"
-            alt="{{ user.username }}'s profile picture"
-          />
-          <h2 class="account-heading">{{ user.username }}</h2>
-        </article>
-        <div class="Right-navbarr">
-          <a href="#" onclick="showProfile()" id="profileid" class="test">Profile</a>
-          <a href="#" onclick="showModify()" id="hisotryid">History & Stats</a>
-          <a href="#" onclick="showStats()" id="modifyid">Modify Profile</a>
+        <div class="Left-Subsection">
+            <article class="User">
+                <img
+                        class="USER_PROFILE_PIC"
+                        src="{{ user.profile.image.url }}"
+                        alt="{{ user.username }}'s profile picture"
+                />
+                <h2 class="account-heading">{{ user.username }}</h2>
+            </article>
+            <div class="Right-navbarr">
+                <a href="#" onclick="showProfile()" id="profileid" class="test">Profile</a>
+                <a href="#" onclick="showModify()" id="hisotryid">History & Stats</a>
+                <a href="#" onclick="showStats()" id="modifyid">Modify Profile</a>
+            </div>
         </div>
-      </div>
-      <div class="Right-Subsection">
-        <div class="Profile" id="Profile">
-          <article class="User-Data">
-            <p class="user-data-text">Rank: #{{ user.profile.user_rank }}</p>
-            <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
-            <p class="user-data-text">
-              Ratio : {{ user.profile.user_rank }}
-            </p>
-          </article>
-          <article class="LastGamePlayed">
-             <span id="loose"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
-            <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
-            <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
-          </article>
-          <article class="UserPreferedSymbol">
-            <div class="items">
-		<div class="item active">
-			<img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
-		</div>
-		<div class=" item next">
-			<img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
-		</div>
-		<div class="item">
-			<img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
-		</div>
-		<div class="item">
-			<img src="/media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.png">
-		</div>
-		<div class="item prev">
-			<img src="/media/PlayersIcon/PASTEL/PASTEL_X_ICON.png">
-		</div>
-		<div class="button-container">
-			<div class="button"><i class="fas fa-angle-left"></i></div>
-			<div class="button"><i class="fas fa-angle-right"></i></div>
-		</div>
-	</div>
-          </article>
+        <div class="Right-Subsection">
+            <div class="Profile" id="Profile">
+                <article class="User-Data">
+                    <p class="user-data-text">Rank: #{{ user.profile.user_rank }}</p>
+                    <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
+                    <p class="user-data-text">
+                        Ratio : {{ user.profile.user_rank }}
+                    </p>
+                </article>
+                <article class="LastGamePlayed">
+                    <span id="loose"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
+                    <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
+                    <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
+                </article>
+                <article class="UserPreferedSymbol">
+                    <div class="items">
+                        <div class="item active">
+                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                        </div>
+                        <div class=" item next">
+                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                        </div>
+                        <div class="item">
+                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                        </div>
+                        <div class="item">
+                            <img src="/media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.png">
+                        </div>
+                        <div class="item prev">
+                            <img src="/media/PlayersIcon/PASTEL/PASTEL_X_ICON.png">
+                        </div>
+                        <div class="button-container">
+                            <div class="button"><i class="fas fa-angle-left"></i></div>
+                            <div class="button"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="Stats" id="StatsHistory" style="display: none">
+                <article class="User-Data">
+                    <p class="user-data-text">Rank: {{ user.profile.user_rank }}</p>
+                    <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
+                    <p class="user-data-text">
+                        Ratio : {{ user.profile.user_rank }}
+                    </p>
+                </article>
+                <article class="LastGamePlayed">
+                    <span>Game 1</span>
+                    <span>Game 1</span>
+                    <span>Game 1</span>
+                </article>
+                <article class="UserPreferedSymbol">
+                    <ul>
+                        <li><i class="fa fa-heart"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-flag"></i></li>
+                        <li><i class="fa fa-circle"></i></li>
+                    </ul>
+                </article>
+            </div>
+            <div class="ModifyProfile" id="Modify" style="display: none">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <fieldset style="color: white" class="form-elemnt">
+                        <legend class="">Profile Info</legend>
+
+                        <label for="{{ user_form.username.id_for_label }}"
+                        >Username:</label
+                        >
+                        {{ user_form.as_p }}
+                        <!-- Repeat for other form fields -->
+
+                        <label for="{{ profile_form.image.id_for_label }}"
+                        >Profile Picture:</label
+                        >
+                        {{ profile_form.as_p }}
+                        <!-- Repeat for other profile form fields -->
+                    </fieldset>
+
+                    <footer class="form-button">
+                        <button class="btn" type="submit" aria-label="Update Profile">
+                            Update
+                        </button>
+                    </footer>
+                </form>
+            </div>
         </div>
-        <div class="Stats" id="StatsHistory" style="display: none">
-          <article class="User-Data">
-            <p class="user-data-text">Rank: {{ user.profile.user_rank }}</p>
-            <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
-            <p class="user-data-text">
-              Ratio : {{ user.profile.user_rank }}
-            </p>
-          </article>
-          <article class="LastGamePlayed">
-            <span>Game 1</span>
-            <span>Game 1</span>
-            <span>Game 1</span>
-          </article>
-          <article class="UserPreferedSymbol">
-            <ul>
-              <li><i class="fa fa-heart"></i></li>
-              <li><i class="fa fa-star"></i></li>
-              <li><i class="fa fa-flag"></i></li>
-              <li><i class="fa fa-circle"></i></li>
-            </ul>
-          </article>
-        </div>
-        <div class="ModifyProfile" id="Modify" style="display: none">
-          <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <fieldset style="color: white" class="form-elemnt">
-              <legend class="">Profile Info</legend>
-
-              <label for="{{ user_form.username.id_for_label }}"
-                >Username:</label
-              >
-              {{ user_form.as_p }}
-              <!-- Repeat for other form fields -->
-
-              <label for="{{ profile_form.image.id_for_label }}"
-                >Profile Picture:</label
-              >
-              {{ profile_form.as_p }}
-              <!-- Repeat for other profile form fields -->
-            </fieldset>
-
-            <footer class="form-button">
-              <button class="btn" type="submit" aria-label="Update Profile">
-                Update
-              </button>
-            </footer>
-          </form>
-        </div>
-      </div>
     </div>
+
     <script>
-    let Profile_select = document
-      .getElementById("profileid")
-      .addEventListener("click", showProfile);
-    let ModifyProfile_Select = document
-      .getElementById("modifyid")
-      .addEventListener("click", showModify);
-    let History_Select = document
-      .getElementById("hisotryid")
-      .addEventListener("click", showStats);
-    let ProfileSection = document.getElementById("Profile");
-    let StatsSection = document.getElementById("StatsHistory");
-    let ModifySection = document.getElementById("Modify");
-var links = document.querySelectorAll('.Right-navbarr a');
-    function showProfile() {
-      StatsSection.style.display = "none";
-      ModifySection.style.display = "none";
-      ProfileSection.style.display = "flex";
+        let Profile_select = document
+            .getElementById("profileid")
+            .addEventListener("click", showProfile);
+        let ModifyProfile_Select = document
+            .getElementById("modifyid")
+            .addEventListener("click", showModify);
+        let History_Select = document
+            .getElementById("hisotryid")
+            .addEventListener("click", showStats);
+        let ProfileSection = document.getElementById("Profile");
+        let StatsSection = document.getElementById("StatsHistory");
+        let ModifySection = document.getElementById("Modify");
+        var links = document.querySelectorAll('.Right-navbarr a');
 
-    }
-    function showModify() {
-      StatsSection.style.display = "none";
-      ModifySection.style.display = "flex";
-      ProfileSection.style.display = "none";
-    }
-    function showStats() {
-      StatsSection.style.display = "flex";
-      ModifySection.style.display = "none";
-      ProfileSection.style.display = "none";
-    }
+        function showProfile() {
+            StatsSection.style.display = "none";
+            ModifySection.style.display = "none";
+            ProfileSection.style.display = "flex";
 
-    ////////////////////////////////////
-    const slider = document.querySelector(".items");
-		const slides = document.querySelectorAll(".item");
-		const button = document.querySelectorAll(".button");
+        }
 
-		let current = 0;
-		let prev = 4;
-		let next = 1;
+        function showModify() {
+            StatsSection.style.display = "none";
+            ModifySection.style.display = "flex";
+            ProfileSection.style.display = "none";
+        }
 
-		for (let i = 0; i < button.length; i++) {
-			button[i].addEventListener("click", () => i == 0 ? gotoPrev() : gotoNext());
-		}
+        function showStats() {
+            StatsSection.style.display = "flex";
+            ModifySection.style.display = "none";
+            ProfileSection.style.display = "none";
+        }
 
-		const gotoPrev = () => current > 0 ? gotoNum(current - 1) : gotoNum(slides.length - 1);
+        ////////////////////////////////////
+        const slider = document.querySelector(".items");
+        const slides = document.querySelectorAll(".item");
+        const button = document.querySelectorAll(".button");
 
-		const gotoNext = () => current < 4 ? gotoNum(current + 1) : gotoNum(0);
+        let current = 0;
+        let prev = 4;
+        let next = 1;
 
-		const gotoNum = number => {
-			current = number;
-			prev = current - 1;
-			next = current + 1;
+        for (let i = 0; i < button.length; i++) {
+            button[i].addEventListener("click", () => i == 0 ? gotoPrev() : gotoNext());
+        }
 
-			for (let i = 0; i < slides.length; i++) {
-				slides[i].classList.remove("active");
-				slides[i].classList.remove("prev");
-				slides[i].classList.remove("next");
-			}
+        const gotoPrev = () => current > 0 ? gotoNum(current - 1) : gotoNum(slides.length - 1);
 
-			if (next == 5) {
-				next = 0;
-			}
+        const gotoNext = () => current < 4 ? gotoNum(current + 1) : gotoNum(0);
 
-			if (prev == -1) {
-				prev = 4;
-			}
+        const gotoNum = number => {
+            current = number;
+            prev = current - 1;
+            next = current + 1;
 
-			slides[current].classList.add("active");
-			slides[prev].classList.add("prev");
-			slides[next].classList.add("next");
-		}
-  </script>
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+                slides[i].classList.remove("prev");
+                slides[i].classList.remove("next");
+            }
+
+            if (next == 5) {
+                next = 0;
+            }
+
+            if (prev == -1) {
+                prev = 4;
+            }
+
+            slides[current].classList.add("active");
+            slides[prev].classList.add("prev");
+            slides[next].classList.add("next");
+        }
+    </script>
 {% endblock %}
