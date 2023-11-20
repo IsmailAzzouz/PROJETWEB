@@ -1,0 +1,61 @@
+<!-- join_game.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Game</title>
+</head>
+<body>
+
+<h1>Join a Game</h1>
+
+<!-- join_game.html -->
+<!-- join_game.html -->
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Your form HTML -->
+<form id="join-game-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="game-code">Enter Game Code:</label>
+    <input type="text" id="game-code" name="game_code" required>
+    <button type="button" id="join-game-btn">Join Game</button>
+</form>
+
+<!-- jQuery script for asynchronous form submission -->
+<script>
+    $(document).ready(function () {
+        $("#join-game-btn").click(function () {
+            var gameCode = $("#game-code").val();
+
+            // Get the CSRF token from the cookie
+            var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "join-game" %}',  // Replace with the actual URL for joining a game
+                data: {game_code: gameCode},
+                dataType: 'json',
+                headers: {"X-CSRFToken": csrftoken},  // Include the CSRF token in the headers
+                success: function (data) {
+                    if (data.success) {
+                        // Redirect to the game page upon successful join
+                        window.location.href = '{% url "waiting-page" %}';  // Replace with the actual URL for waiting
+                    } else {
+                        // Handle errors (e.g., display error messages)
+                        console.log('Error joining the game:', data.message);
+                    }
+                },
+                error: function (data) {
+                    console.log('Error joining the game');
+                    console.log(data);
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>

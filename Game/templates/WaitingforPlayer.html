@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Your waiting stage HTML -->
+<div id="waiting-stage">
+    <p>Waiting for another player to join...</p>
+</div>
+
+<!-- jQuery script for checking game status -->
+<script>
+    $(document).ready(function () {
+        // Function to check game status
+        function checkGameStatus() {
+            $.ajax({
+                type: 'GET',
+                url: 'checkgamestatus/',  // Replace with the actual URL for checking game status
+                dataType: 'json',
+                success: function (data) {
+                    // Check if the game is ready (another player has joined)
+                    if (data.ready) {
+                        // Redirect to the game page
+                        window.location.href = '{% url "waiting-page" %}';  // Replace with the actual URL for playing the game
+                    } else {
+                        // Continue checking game status after a delay
+                        setTimeout(checkGameStatus, 5000);  // Check every 5 seconds (adjust as needed)
+                    }
+                },
+                error: function (data) {
+                    console.log('Error checking game status');
+                    console.log(data);
+                }
+            });
+        }
+
+        // Call the function to start checking game status
+        checkGameStatus();
+    });
+</script>
+
+</body>
+</html>
