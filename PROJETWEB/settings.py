@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'HelbMorpion.apps.HelbmorpionConfig',
     'users.apps.UsersConfig',
     'Game.apps.GameConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {'hosts': [('127.0.0.1', 6379)]},
+    },
 }
 
 # Password validation
@@ -125,5 +132,5 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'morpion-home'
+LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'
