@@ -1,6 +1,6 @@
 # views.py
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
 from .forms import GameForm, JoinGameForm
@@ -49,12 +49,25 @@ def check_game_status(request):
         try:
             # Retrieve the game instance based on the game code
             game = Game.objects.get(id_code=game_code)
+            player_1_connected = is_user_authenticated(game.player_1)
 
-            # Check if the game is ready (player_2 is set)
-            game_ready = bool(game.player_2)
-
-            # Respond with a JSON object indicating game status
-            return JsonResponse({'ready': game_ready})
+            # Check if both players are connected
+            if game.player_2 is not None:
+                player_2_connected = is_user_authenticated(game.player_2)
+                if player_1_connected and player_2_connected:
+                    # Include player data and game settings in the JSON response
+                    response_data = {
+                        'ready': True,
+                        'player_1': game.player_1.username,
+                        'player_2': game.player_2.username,
+                        'game_idcode': game.id_code,
+                        'game_private': game.private,
+                        'other_game_data': 'your_additional_game_data',
+                    }
+                    return JsonResponse(response_data)
+            else:
+                # Respond with a JSON object indicating game status
+                return JsonResponse({'ready': False})
 
         except Game.DoesNotExist:
             # Handle the case where the game with the given code does not exist
@@ -62,6 +75,10 @@ def check_game_status(request):
 
     # Handle the case where there is no game code in the session
     return JsonResponse({'error': 'Game code not found'}, status=400)
+
+
+def is_user_authenticated(user):
+    return user.is_authenticated
 
 
 @require_POST
@@ -100,3 +117,23 @@ def waiting_page(request):
 
 def joining_page(request):
     return render(request, 'JoinGame.html')
+
+
+def game_scene(request, player_1, player_2, game_idcode, game_private):
+    # Look up the game in the database based on game_idcode
+    game = get_object_or_404(Game, id_code=game_idcode)
+
+    # You can now access additional settings from the game instance
+    game_x = game.grid_x
+    game_y = game.grid_y
+    game_alignment = game.alignment
+
+    return render(request, 'GameScene.html', {
+        'player_1': player_1,
+        'player_2': player_2,
+        'game_idcode': game_idcode,
+        'game_private': game_private,
+        'game_x': game_x,
+        'game_y': game_y,
+        'game_alignment': game_alignment,
+    })

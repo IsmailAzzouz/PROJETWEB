@@ -38,4 +38,8 @@ urlpatterns = [
                        name="joining-page"),
                   path('joining/', join_game,
                        name="join-game"),
+                  path(
+                      'gamescene/gamecreator=<str:player_1>/player2=<str:player_2>/gamecode=<str:game_idcode>/isgameprivate=<str:game_private>/',
+                      game_scene, name='Game-Scene'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

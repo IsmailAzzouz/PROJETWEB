@@ -1,0 +1,35 @@
+<!-- game_ready_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Ready</title>
+</head>
+<body>
+
+<h1>Game Ready</h1>
+
+<p>Player 1: {{ player_1 }}</p>
+<p>Player 2: {{ player_2 }}</p>
+
+<!-- Display other game settings as needed -->
+<fieldset name="GameSettings">
+    <legend for="GameSettings"> GameSettings</legend>
+    <p>Grid Size: {{ game_y }} x {{ game_y }}</p>
+    <p>Alignment: {{ game_alignment }}</p>
+</fieldset>
+
+<h1>TO DO</h1>
+<fieldset name="TODO">
+    <legend for="TODO"> TODO</legend>
+    <p>Add js grid generation</p>
+    <p>test grid for win draw and loose</p>
+    <p>if time check for winn animation and return to main menu</p>
+    <p>if more time make some css</p>
+
+</fieldset>
+<!-- Add any other information or actions you want to display -->
+
+</body>
+</html>
