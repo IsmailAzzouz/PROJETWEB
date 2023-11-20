@@ -5,6 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Ready</title>
+    <!-- Include jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .GameScene {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Set the height of the container, adjust as needed */
+            margin: 0;
+        }
+
+        #GameGrid {
+            display: grid;
+            width: 85%;
+            height: 75%;
+            grid-template-columns: repeat(var(--game-x, 3), minmax(0, 1fr));
+            grid-template-rows: repeat(var(--game-y, 3), minmax(0, 1fr));
+            gap: 5px;
+        }
+
+        .GridCells {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        h1 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        fieldset {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,20 +66,139 @@
 <!-- Display other game settings as needed -->
 <fieldset name="GameSettings">
     <legend for="GameSettings"> GameSettings</legend>
-    <p>Grid Size: {{ game_y }} x {{ game_y }}</p>
+    <p>Grid Size: {{ game_x }} x {{ game_y }}</p>
     <p>Alignment: {{ game_alignment }}</p>
 </fieldset>
+
+<div class="GameScene">
+    <div class="GameGrid" id="GameGrid">
+
+    </div>
+</div>
 
 <h1>TO DO</h1>
 <fieldset name="TODO">
     <legend for="TODO"> TODO</legend>
     <p>Add js grid generation</p>
-    <p>test grid for win draw and loose</p>
-    <p>if time check for winn animation and return to main menu</p>
-    <p>if more time make some css</p>
-
+    <p>test grid for win draw and lose</p>
+    <p>if time check for win animation and return to the main menu</p>
+    <p>if more time make some CSS</p>
 </fieldset>
+
 <!-- Add any other information or actions you want to display -->
+
+<script>
+    // Get values from Django variables embedded in the template
+    let gridX = {{ game_x }};
+    let gridY = {{ game_y }};
+    console.log(gridX, gridY);
+
+    // Initialize game state
+    let gameBoard = Array.from({length: gridX}, () => Array(gridY).fill(''));
+    let currentPlayer = 0;
+
+    function updateGrid() {
+        // Update the grid based on the gameBoard
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                $(`#GridCell_${i + 1}_${j + 1}`).text(gameBoard[i][j]);
+            }
+        }
+    }
+
+    function checkWin() {
+        // Check rows, columns, and diagonals for a win
+        for (let i = 0; i < gridX; i++) {
+            if (gameBoard[i][0] !== '' &&
+                gameBoard[i].every(cell => cell === gameBoard[i][0])
+            ) {
+                return true; // Win in row
+            }
+        }
+
+        for (let i = 0; i < gridY; i++) {
+            if (gameBoard[0][i] !== '' &&
+                gameBoard.every(row => row[i] === gameBoard[0][i])
+            ) {
+                return true; // Win in column
+            }
+        }
+
+        // Check diagonals
+        if (gameBoard[0][0] !== '' &&
+            gameBoard.every((row, index) => row[index] === gameBoard[0][0])
+        ) {
+            return true; // Win in top-left to bottom-right diagonal
+        }
+
+        if (gameBoard[0][gridY - 1] !== '' &&
+            gameBoard.every((row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1])
+        ) {
+            return true; // Win in top-right to bottom-left diagonal
+        }
+
+        return false;
+    }
+
+    function checkDraw() {
+        // Check if the board is full (no empty cells)
+        return gameBoard.every(row => row.every(cell => cell !== ''));
+    }
+
+    function switchPlayer() {
+        currentPlayer = 1 - currentPlayer;
+    }
+
+    $(document).ready(function () {
+        // Loop to create cells and append them to the GameGrid
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                var newCell = document.createElement("div");
+
+                // Add a class to the new div
+                newCell.classList.add("GridCells");
+
+                // Alternatively, you can set an ID
+                newCell.id = "GridCell_" + (i + 1) + "_" + (j + 1);
+
+                // Create the parent div (you can select an existing div by ID or class)
+                var parentDiv = document.getElementById("GameGrid");
+
+                // Append the new div to the parent div
+                parentDiv.appendChild(newCell);
+
+                // Click event handler
+                $(document).on('click', `#${newCell.id}`, function () {
+                    const cellId = $(this).attr('id');
+                    const row = parseInt(cellId.charAt(9)) - 1;
+                    const col = parseInt(cellId.charAt(11)) - 1;
+
+                    // Check if the cell is already taken
+                    if (gameBoard[row][col] === '') {
+                        gameBoard[row][col] = currentPlayer === 0 ? 'X' : 'O';
+
+                        // Update the grid
+                        updateGrid();
+
+                        // Check for a win
+                        if (checkWin()) {
+                            alert(`Player ${currentPlayer + 1} wins!`);
+                            // Reset the game or perform any other action
+                        } else if (checkDraw()) {
+                            alert('It\'s a draw!');
+                            // Reset the game or perform any other action
+                        } else {
+                            // Switch players
+                            switchPlayer();
+                        }
+                    } else {
+                        alert('Cell already taken! Choose another.');
+                    }
+                });
+            }
+        }
+    });
+</script>
 
 </body>
 </html>
