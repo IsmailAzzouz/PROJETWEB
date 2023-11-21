@@ -137,3 +137,54 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         'game_y': game_y,
         'game_alignment': game_alignment,
     })
+
+
+# views.py
+
+from channels.generic.websocket import AsyncWebsocketConsumer
+import json
+
+
+class GameConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        action = text_data_json.get('action', '')
+
+        # Traitez le message en fonction de l'action
+        if action == 'move':
+            await self.handle_move(text_data_json)
+        elif action == 'chat_message':
+            await self.handle_chat_message(text_data_json)
+        # Ajoutez d'autres actions au besoin
+
+    async def handle_move(self, data):
+        # Exemple de traitement d'une action "move"
+        row = data.get('row', 0)
+        col = data.get('col', 0)
+
+        # Effectuez le traitement nécessaire pour le mouvement dans le jeu
+        # ...
+
+        # Envoyez une réponse
+        await self.send_response('move', {'success': True})
+
+    async def handle_chat_message(self, data):
+        # Exemple de traitement d'une action "chat_message"
+        message = data.get('message', '')
+
+        # Effectuez le traitement nécessaire pour les messages de chat
+        # ...
+
+        # Envoyez une réponse
+        await self.send_response('chat_message', {'success': True})
+
+    async def send_response(self, action, data):
+        # Envoyez une réponse au frontend avec l'action spécifiée et les données associées
+        response_data = {'action': action, 'data': data}
+        await self.send(text_data=json.dumps(response_data))

@@ -1,0 +1,254 @@
+
+body{
+
+}
+.USER_PROFILE_PIC{
+    border-radius: 50%;
+    width: 60%;
+    padding: 10px;
+    filter: drop-shadow(-0.3vw  0.5vh 0px #ab20fd);
+}
+
+.Global-Frame{
+    display: flex;
+    width: 80%;
+    height: 85%;
+    position: sticky;
+    margin: auto;
+    padding: 10px;
+    top: calc(50% - 32.5%);
+    margin-top: 15%;
+    /*************************/
+
+}
+
+.Left-Subsection{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+border-color: white;
+    border-radius: 1px;
+    border-style: solid;
+background-color: #2e3234;
+}
+
+.User{
+    text-align: center;
+}
+
+.Right-navbarr{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+
+
+}
+.Right-navbarr a {
+    transition: ease-in-outs;
+    padding: 13px;
+
+}
+.Right-navbarr a:hover{
+    background-color: #b77fe3;
+}
+
+
+.Right-navbarr a:active{
+    background-color: #b77fe3;
+}
+
+.Right-Subsection{
+    display: flex;
+    width: calc(100% - 250px);
+    background-color: rgba(183, 127, 227, 0.58);
+    backdrop-filter: blur(10%);
+    border-top: white;
+border-right: white;
+border-bottom: white;
+    border-style: solid;
+    border-radius: 1px;
+    border-left: transparent;
+}
+
+.Profile{
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+
+}
+
+.User-Data{
+    display: flex;
+    flex-direction: row;
+text-align: center;
+padding:10px;
+    width: 100%;
+        justify-content: space-around;
+    font-size: 1.75vw;
+    height: fit-content;
+
+}
+
+.User-Data p{
+    height: fit-content;
+    margin: auto;
+    background-color: #2e3234;
+    border-radius: 30px;
+    width: calc(20% + 10px);
+    background-size: auto;
+    filter: drop-shadow(-0.3vw  0.5vh 0px #ab20fd);
+}
+
+.UserPreferedSymbol{
+    display: flex;
+    flex-direction: row;
+text-align: center;
+padding:10px;
+    width: 100%;
+        justify-content: space-around;
+}
+/***************************************************/
+.LastGamePlayed{
+
+    display:flex;
+    flex-direction:column;
+    padding:10px;
+    margin:10px;
+    column-gap: 10px;
+    gap:10px;
+    width: 75%;
+    color:white;
+    }
+    .LastGamePlayed span{
+    padding:0px 10px 0px 10px;
+        margin: 5px 0px 5px 0px;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    border-radius:50px;
+    border-style:none;
+    border-color:transparent;
+    /*backdrop-filter: blur(10px);*/
+        color:white;
+         filter: drop-shadow(-0.3vw  0.5vh 0px #ab20fd);
+    }
+     .LastGamePlayed span:nth-child(2){
+   transform: scale(0.8);
+
+    margin-top:-25px;
+    position:relative;
+    z-index:-1;
+
+    }
+    .LastGamePlayed span:nth-child(3){
+   transform: scale(0.6);
+    margin-top:-30px;
+    position:relative;
+    z-index:-2;
+
+    }
+
+    #win{
+        background-color: #00ff00;
+    }
+    #loose{
+        background-color: palevioletred;
+    }
+
+
+    /*************************************************************/
+.UserPreferedSymbol{
+    height: fit-content;
+    width: fit-content;
+    transform: scale(50%);
+}
+.items {
+  position: absolute;
+top: 86px;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+
+.items .item {
+
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  z-index: -1;
+  opacity: 0;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item.active {
+  opacity: 1;
+  z-index: 99;
+  box-shadow: 0px 0px 105px -35px rgba(0, 0, 0, 0.75);
+}
+
+.item.prev {
+  z-index: 2;
+  opacity: 0.25;
+  transform: translate(-125%, -50%);
+}
+
+.item.next {
+  z-index: 2;
+  opacity: 0.25;
+  transform: translate(25%, -50%);
+}
+
+.items .button-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 275px;
+  z-index: 3;
+}
+
+.button-container .button {
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
+  position: relative;
+  opacity: 0.75;
+  transition: all 300ms ease-in-out;
+}
+
+.button-container .button:hover {
+  opacity: 1;
+}
+
+.button-container .button:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgb(208, 98, 98);
+  border-radius: 50%;
+  z-index: -99;
+}
+
+.button-container .button:nth-child(1) {
+  float: left;
+}
+
+.button-container .button:nth-child(2) {
+  float: right;
+}
