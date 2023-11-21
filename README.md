@@ -22,8 +22,10 @@ bash
 Copy code
 git clone https://github.com/IsmailAzzouz/PROJETWEB.git
 Open the project folder in your preferred text editor.
-
-Launch the index.html file in a web browser.
+pip freeze > requirements.txt
+pip install -r requirements.txt
+daphne PROJETWEB.asgi:application
+and it's lunched 
 
 Usage
 Open the web app in your browser.
