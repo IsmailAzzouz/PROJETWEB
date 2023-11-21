@@ -188,3 +188,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Envoyez une réponse au frontend avec l'action spécifiée et les données associées
         response_data = {'action': action, 'data': data}
         await self.send(text_data=json.dumps(response_data))
+
+
+def play(request):
+    return render(request, 'Play.html')

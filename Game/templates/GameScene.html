@@ -31,8 +31,9 @@
             display: grid;
             width: 85%;
             height: 75%;
-            grid-template-columns: repeat(var(--game-x, 3), minmax(0, 1fr));
-            grid-template-rows: repeat(var(--game-y, 3), minmax(0, 1fr));
+
+grid-template-columns: repeat({{ game_y }}, minmax(0, 1fr));
+    grid-template-rows: repeat({{ game_x }}, minmax(0, 1fr));
             gap: 5px;
         }
 

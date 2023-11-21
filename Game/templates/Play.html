@@ -1,0 +1,44 @@
+{% extends "BASE.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/profile.css' %}">
+    <style>
+
+    .Options{
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+    .LinksHref a{
+        padding: 15px;
+        filter: drop-shadow(5px 3px 0px #7a10e1);
+transition: 0.5s;
+    }
+    .Options a:hover{
+        padding: 20px;
+        transition: 0.5s;
+    filter: drop-shadow(5px 3px 2px rgb(183, 0, 255));
+    }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Play
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="Options">
+        <h1>What do You want to do</h1>
+        <div class="LinksHref"> <a class="helbmorpion" href="{% url 'create_game' %}">Create-Game</a>
+    <a class="helbmorpion" href="{% url 'joining-page' %}">Join-Game</a></div>
+       </div>
+
+
+
+
+{% endblock %}
