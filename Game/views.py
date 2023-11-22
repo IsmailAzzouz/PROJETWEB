@@ -191,4 +191,16 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 
 def play(request):
+
+
     return render(request, 'Play.html')
+
+
+def generategametable(request):
+    # Récupérer les données du tableau de scores
+    games = Game.objects.filter(player_2__isnull=True)
+
+    # Convertir le QuerySet en une liste de dictionnaires
+    scoreboard_data = [{'code': game.id_code, 'grid_X': game.grid_x,'grid_Y': game.grid_y,'alignement': game.alignment,} for game in games]
+
+    return JsonResponse(scoreboard_data, safe=False)
