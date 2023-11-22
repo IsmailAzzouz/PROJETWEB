@@ -43,4 +43,5 @@ urlpatterns = [
                       game_scene, name='Game-Scene'),
                   path('Play/', play,
                        name="Play"),
+                  path('gametable/', generategametable, name='GameTable'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
