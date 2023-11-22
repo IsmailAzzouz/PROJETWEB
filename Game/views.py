@@ -198,7 +198,7 @@ def play(request):
 
 def generategametable(request):
     # Récupérer les données du tableau de scores
-    games = Game.objects.filter(player_2__isnull=True)
+    games = Game.objects.filter(player_2__isnull=True,isfinished__isnull=True, private=False)
 
     # Convertir le QuerySet en une liste de dictionnaires
     scoreboard_data = [{'code': game.id_code, 'grid_X': game.grid_x,'grid_Y': game.grid_y,'alignement': game.alignment,} for game in games]
