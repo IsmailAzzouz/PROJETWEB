@@ -1,5 +1,10 @@
-FAIRE UN MODEL GRID QUI A UNE RALTION EN ONE TO ONE AVEC GAME UNE GAME A UNE GRIDE UNE GRIDE N'A QU'UNE GAME
 
-FAIRE UN MODEL CELLS QUI A UNE RELATION ONE TO MANY AVEC GRID ET COMME ATTRIBUTS UNE COORDONER UNE VALUE ETG UNE GRID
 
-APRES AVOIR FAIT CA TEST SI TOUJOURS POSSIBLE DE REJOINDRE DES GAME PAR CREATEGAME ET SCOREBOARD
+prompt : it works after some tweaks ! now there's still work to do :
+
+in ajax the grid as to get refreshed every seconds when it's our turn it's not refreshed till click on a valid cell
+while the grid is the same as the grid before the refresh and it's still not our turn then we can't click on the cells (it just display an error alert but doesn't call update_grid)
+the cells value is not show in html so it has to be
+when the game is finished then if win the player winner has to be set winner in the database if draw the winner proprety is not touched but the isfinished boolean is set to true
+
+that's all i see for now

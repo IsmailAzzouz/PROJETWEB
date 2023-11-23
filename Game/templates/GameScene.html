@@ -68,10 +68,53 @@ grid-template-columns: repeat({{ game_y }}, minmax(0, 1fr));
     let currentPlayer = 0;
 const gameId = '{{ game_idcode }}';
     // Function to update the visual representation of the grid
-    function updateGrid() {
+     function updateCellInDatabase(row, col, symbol) {
+        // Implement the logic to update the cell in the database
+        // You can use Ajax to send a request to the server to update the database
+        // The server should handle the database update based on the move data (row, col, symbol)
+        const csrfToken = '{{ csrf_token }}';
+        const moveData = {
+            row: row,
+            col: col,
+            symbol: symbol,
+            csrfmiddlewaretoken: csrfToken,
+
+        };
+const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
+
+          const url = `${updateCellUrl}?game_idcode=${gameId}`;
+
+
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                row: row,
+                col: col,
+                symbol: symbol,
+                csrfmiddlewaretoken: csrfToken,
+                game_idcode: gameId,  // Pass the game_idcode in the data
+            },
+            success: function (response) {
+                // Handle the server response as needed
+            },
+            error: function () {
+                alert('Error updating the cell in the database. Please try again.');
+            },
+        });
+    }
+function updateGrid() {
         for (let i = 0; i < gridX; i++) {
             for (let j = 0; j < gridY; j++) {
-                $(`#GridCell_${i + 1}_${j + 1}`).text(gameBoard[i][j]);
+                const cellValue = getCellValueFromDatabase(i, j);
+                const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
+                console.log("grid updated");
+                if (cellValue === -1 || cellValue==='') {
+                    cellElement.text('');  // Empty cell
+                } else {
+                    cellElement.text(cellValue === 0 ? 'X' : 'O');
+                }
             }
         }
     }
@@ -126,66 +169,42 @@ const gameId = '{{ game_idcode }}';
     }
 
     // Function to update the cells in the database
-    function updateCellInDatabase(row, col, symbol) {
-        // Implement the logic to update the cell in the database
-        // You can use Ajax to send a request to the server to update the database
-        // The server should handle the database update based on the move data (row, col, symbol)
-        const csrfToken = '{{ csrf_token }}';
-        const moveData = {
-            row: row,
-            col: col,
-            symbol: symbol,
-            csrfmiddlewaretoken: csrfToken,
-
-        };
-const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
-
-          const url = `${updateCellUrl}?game_idcode=${gameId}`;
-
-
-
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: {
-                row: row,
-                col: col,
-                symbol: symbol,
-                csrfmiddlewaretoken: csrfToken,
-                game_idcode: gameId,  // Pass the game_idcode in the data
-            },
-            success: function (response) {
-                // Handle the server response as needed
-            },
-            error: function () {
-                alert('Error updating the cell in the database. Please try again.');
-            },
-        });
-    }
 
     $(document).ready(function () {
         const gameId = '{{ game_idcode }}';
 
         // Function to create the grid
         function createGrid() {
-            $('#GameGrid').empty();
+        $('#GameGrid').empty();
 
-            for (let i = 0; i < gridX; i++) {
-                for (let j = 0; j < gridY; j++) {
-                    const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
-                    $('#GameGrid').append(newCell);
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
+                $('#GameGrid').append(newCell);
+
+                // Get cell value from the database
+                const cellValue = getCellValueFromDatabase(i, j);
+                        console.log(cellValue);
+                // Display the cell value based on the database value
+                if (cellValue === -1 || cellValue==='') {
+                    newCell.text('');  // Empty cell
+                } else {
+                    newCell.text(cellValue === 0 ? 'X' : 'O');
                 }
             }
         }
+    }
 
         // Use event delegation to handle clicks on dynamic cells
         $('#GameGrid').on('click', '.GridCell', function () {
             const row = parseInt($(this).attr('data-row'));
             const col = parseInt($(this).attr('data-col'));
+            $('.GridCell').on('click',function(){
 
+            })
             if (gameBoard[row][col] === '') {
                 gameBoard[row][col] = currentPlayer === 0 ? 'X' : 'O';
-
+                //ICI GERE QUAND ON CLIQUE
                 // Update the grid
                 updateGrid();
 
@@ -210,7 +229,52 @@ const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode 
         createGrid();
 
         // Your other JavaScript code
-    });
+        function refreshGrid() {
+        createGrid();
+        updateGrid();
+    }
+
+    // Use setInterval to refresh the grid every 0.5 seconds
+    setInterval(refreshGrid, 500);
+    });function getCellValueFromDatabase(row, col) {
+        // Implement logic to fetch the cell value from the database based on row and col
+        // Return -1 if the cell is empty, 0 if it belongs to Player 1, 1 if it belongs to Player 2
+        //const url = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
+        const csrfToken = '{{ csrf_token }}';
+        let cellValue = -1;  // Default value if not found
+        const getCellValueFromDatabaseUrl = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
+        console.log(row , col);
+        const cellurl = `${getCellValueFromDatabaseUrl}?game_idcode=${gameId}`;
+        $.ajax({
+            url: cellurl,
+            method: 'POST',
+
+            data: {
+                game_code: gameId,
+                row: row,
+                col: col,
+                csrfmiddlewaretoken: csrfToken,
+
+
+                  // Pass the game_idcode in the data
+            },
+            async: false,  // Ensure synchronous request to get the value before updating
+            success: function (response) {
+    // Check if cellValue is defined before using it
+    if (response.cellValue !== undefined) {
+        cellValue = response.cellValue;
+    } else {
+        // Handle the case where cellValue is not defined
+        alert('Error fetching cell value from the database. Please try again.');
+    }
+},
+            error: function () {
+                alert('Error fetching cell value from the database. Please try again.');
+            },
+        });
+
+        return cellValue;
+    }
 </script>
 
 

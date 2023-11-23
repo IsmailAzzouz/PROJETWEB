@@ -46,5 +46,6 @@ urlpatterns = [
                   path('gametable/', generategametable, name='GameTable'),
                   path('gamescene/move/', handle_player_move, name='handle_player_move'),
                   path('gamescene/move/update_cell_in_database/<str:game_idcode>/', update_cell_in_database,
-                       name='update_cell_in_database')
+                       name='update_cell_in_database'),
+    path('gamescene/move/get_cell_value_from_database/<str:game_idcode>/',getCellValueFromDatabase, name='get_cell_value_from_database'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

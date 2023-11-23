@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import HttpResponse, get_object_or_404
 from .forms import GameForm, JoinGameForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_GET, require_POST
 from PROJETWEB import urls
 
@@ -255,3 +255,15 @@ def update_cell_in_database(request, game_idcode):
         return HttpResponse(status=200)
 
     return HttpResponse(status=400)
+def getCellValueFromDatabase(request, game_idcode):
+    try:
+        row = int(request.POST.get('row', 0))
+        col = int(request.POST.get('col', 0))
+    except ValueError:
+        return HttpResponseBadRequest('Invalid row or col value.')
+
+    game = get_object_or_404(Game, id_code=game_idcode)
+    grid = get_object_or_404(Grid, game=game)
+    cell = get_object_or_404(Cell, grid=grid, x_position=row, y_position=col)
+
+    return JsonResponse({'cellValue': cell.value})
