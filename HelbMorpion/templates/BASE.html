@@ -11,6 +11,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
     />
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/global.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     {% block css %}
 
 {% endblock %}
@@ -23,7 +24,12 @@
 <div class="nav-barre" style="color: white">
 
     <a class="helbmorpion" href="{% url 'morpion-home' %}">HELBMORPION</a>
-    <div class="midlinks"><a class="play" href="{% url 'Play' %}">Play</a>
+    <div class="midlinks">
+        {% if user.is_authenticated %}
+        <a class="play" href="{% url 'Play' %}">Play</a>
+        {% else %}
+        <a class="play" href="{% url 'login' %}">Play</a>
+        {% endif %}
         <a class="score-board" href="{% url 'morpion-home' %}">Score-Board</a>
         <a class="about" href="{% url 'morpion-home' %}">About</a>
         <a class="contact" href="{% url 'morpion-home' %}">Contact</a>

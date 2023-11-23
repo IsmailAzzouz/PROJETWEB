@@ -73,8 +73,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'PROJETWEB.wsgi.application'
-ASGI_APPLICATION = "PROJETWEB.asgi.application"
+#WSGI_APPLICATION = 'PROJETWEB.wsgi.application'
+#ASGI_APPLICATION = "PROJETWEB.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
