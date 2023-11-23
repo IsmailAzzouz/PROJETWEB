@@ -2,178 +2,26 @@
 {% load static %}
 
 {% block css %}
-<style>
-/* Basic form styling */
-.leform {
-  max-width: 400px;
-  margin: 0 auto;
-  transition: 0.2s;
-        display: flex;
-    align-content: center;
-    justify-content: center;
-    flex-direction: column;
-    align-items: stretch;
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_CreatingGame.css' %}">
+{% endblock %}
 
-}
-.container{
-    width: 90%;
-    height: 90%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-/* Style form labels */
-.leform label {
-  display: block;
-  margin-bottom: 8px;
-}
-
-/* Style form input fields */
-.leform input[type="text"],
-.leform input[type="email"],
-.leform input[type="password"],
-.leform textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 16px;
-  box-sizing: border-box;
-  transition: 0.2s;
-    background-color: #9f5cb8;
-}
-
-/* Style form submit button */
-.leform button {
-  background-color: rgb(160, 93, 185);
-  color: #fff;
-  padding: 10px 10px 10px 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-    font-family: Inter;
-    transition: 0.5s;
-}
-
-.leform button:hover {
-  background-color: rgb(213, 122, 245);
-    padding: 10px 13px 10px 13px;
-
-    transition: 0.5s;
-}
-
-/* Additional styles for form container */
-.leform {
-  width: max-content;
-  height: max-content;
-}
-
-/* Styles for a specific form with class FormCreateGame */
-.FormCreateGame {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 500px;
-  height: 500px;
-    position: sticky;
-   margin-top: 155px;
-    left: calc(50% - 250px);
-    transform: scale(1.5);
-left: calc(50% - 250px);
-
-}
-
-.FormCreateGame p input {
-  border-radius: 10px;
-  filter: drop-shadow(2.5px 2.5px 0px #a11bce);
-  border-style: none;
-}
-
-/* Styles for input of type number with focus-visible state */
-input[type="number"]:focus-visible {
-  filter: drop-shadow(2.5px 2.5px 7px #a11bce);
-  background-color: red;
-  transition: 0.5s;
-}
-
-/* Styles for general form inputs */
-.leform input {
-  transition: 0.2s;
-    padding: 2.5px;
-  font-family: Inter;
-   background-color: rgb(24, 25, 27);
-  box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
-}
-.leform input[type="number"]::-webkit-inner-spin-button,
-.leform input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.leform input[type="number"] {
-  -moz-appearance: textfield;
-}
-/* Styles for form input in focus-visible state */
-.leform input:focus-visible {
-  transition: 0.2s;
-  padding: 8px;
-  filter: drop-shadow(2.5px 2.5px 0px #375cd5);
-  border: 1px solid #375cd5;
-  background-color: rgb(24, 25, 27);
-  caret-color: #375cd5;
-  outline: solid 1px transparent;
-  backdrop-filter: blur(30px);
-  color: white;
-  font-family: Inter;
-}
-
-</style>
-
+{% block JS %}
+    <script src="{% static 'JS/SCRIPT_CreatingGame.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<!-- Your form HTML -->
+    <!-- Your form HTML -->
     <div class="FormCreateGame">
-    <div class="container">
-         <form id="game-form" method="post" enctype="multipart/form-data" class="leform">
-    {% csrf_token %}
-    {{ form.as_p}}
-    <button type="button" id="create-game-btn">Create Game</button>
-</form>
+        <div class="container">
+            <form id="game-form" method="post" enctype="multipart/form-data" class="leform">
+                {% csrf_token %}
+                {{ form.as_p}}
+                <button type="button" id="create-game-btn">Create Game</button>
+            </form>
+        </div>
     </div>
 
-
-    </div>
-
-<!-- jQuery script for asynchronous form submission -->
-<script>
-    
-    $(document).ready(function () {
-        $("#create-game-btn").click(function () {
-            var form = $("#game-form");
-            $.ajax({
-                type: form.attr("method"),
-                url: form.attr("action"),
-                data: form.serialize(),
-                dataType: 'json',
-                success: function (data) {
-                    if (data.success) {
-                        // Redirect to the game page upon successful join
-                        window.location.href = '{% url "waiting-page" %}';  // Replace with the actual URL for waiting
-                    } else {
-                        // Handle errors (e.g., display error messages)
-                        console.log('Error joining the game:', data.message);
-                    }
-                },
-                error: function (data) {
-                    // Handle error response
-                    alert("erreur");
-                    console.log(data);
-
-                }
-            });
-        });
-    });
-</script>
+    <script>
+        const url='{% url "waiting-page" %}';
+    </script>
 {% endblock %}

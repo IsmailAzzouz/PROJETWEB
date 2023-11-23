@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>test</title>
-</head>
-<body>
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% extends "BASE.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_WaitingForPlayer.css' %}">
+{% endblock %}
+
+{% block JS %}
+
+{% endblock %}
+
+{% block content %}
 
 <!-- Your waiting stage HTML -->
-<div id="waiting-stage">
-    <p>Waiting for another player to join...</p>
+    <div class="CONTAINER">
+    <div id="waiting-stage">
+    <H1>Waiting <br> For <br> Another Player<br></H1>
 </div>
-
-<!-- jQuery script for checking game status -->
+    </div>
 <script>
+    player_1=encodeURIComponent(gameData.player_1)
     $(document).ready(function () {
         // Function to check game status
         // Function to check game status
@@ -59,6 +63,9 @@
 
     });
 </script>
+{% endblock %}
+<!-- jQuery script for checking game status -->
 
+LE JS EST DANS LE BODY SA MARCHE PAS ATTENTION 88888888
 </body>
 </html>
