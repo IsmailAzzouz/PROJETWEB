@@ -7,7 +7,7 @@ TODO:
                 put winner username in the db and actualing he's score
             draw:
                 put the isfinised bool to true in the db
-    Add user symbols from there profile each user sees hes chooser symbols individually so if player one choosed x neon player two on player one pov will have o neon
+    Add user symbols from there profile each user sees he's chooser symbols individually so if player one chose x neon player two on player one pov will have o neon
     Put the js in a js file
     Make a CSS for the game
     Make the scoreBoard
