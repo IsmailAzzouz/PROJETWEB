@@ -1,20 +1,12 @@
-{% load static %}
-
-<!-- game_ready_page.html -->
+<!-- game_grid.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Ready</title>
-    <!-- Include jQuery from a CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://channels.readthedocs.io/en/latest/_static/channels.js"></script>
-
-
-
+    <title>Tic-Tac-Toe Game</title>
     <style>
-        body {
+        /* Your styles here */body {
             margin: 0;
             padding: 0;
         }
@@ -37,7 +29,7 @@ grid-template-columns: repeat({{ game_y }}, minmax(0, 1fr));
             gap: 5px;
         }
 
-        .GridCells {
+        .GridCell {
             box-sizing: border-box;
             width: 100%;
             height: 100%;
@@ -64,175 +56,163 @@ grid-template-columns: repeat({{ game_y }}, minmax(0, 1fr));
 </head>
 <body>
 
-<h1>Game Ready</h1>
+<h1>Tic-Tac-Toe Game</h1>
 
-<p>Player 1: {{ player_1 }}</p>
-<p>Player 2: {{ player_2 }}</p>
+<div id="GameGrid"></div>
 
-<!-- Display other game settings as needed -->
-<fieldset name="GameSettings">
-    <legend for="GameSettings"> GameSettings</legend>
-    <p>Grid Size: {{ game_x }} x {{ game_y }}</p>
-    <p>Alignment: {{ game_alignment }}</p>
-</fieldset>
-
-<div class="GameScene">
-    <div class="GameGrid" id="GameGrid">
-
-    </div>
-</div>
-
-<h1>TO DO</h1>
-<fieldset name="TODO">
-    <legend for="TODO"> TODO</legend>
-    <p>Add js grid generation</p>
-    <p>test grid for win draw and lose</p>
-    <p>if time check for win animation and return to the main menu</p>
-    <p>if more time make some CSS</p>
-</fieldset>
-
-<!-- Add any other information or actions you want to display -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Get values from Django variables embedded in the template
-    // Get values from Django variables embedded in the template
-let gridX = {{ game_x }};
-let gridY = {{ game_y }};
-console.log(gridX, gridY);
-
-// Initialize game state
-let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-let currentPlayer = 0;
-
-function updateGrid() {
-    // Update the grid based on the gameBoard
-    for (let i = 0; i < gridX; i++) {
-        for (let j = 0; j < gridY; j++) {
-            $(`#GridCell_${i + 1}_${j + 1}`).text(gameBoard[i][j]);
+    let gridX = {{ game_x }};
+    let gridY = {{ game_y }};
+    let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+    let currentPlayer = 0;
+const gameId = '{{ game_idcode }}';
+    // Function to update the visual representation of the grid
+    function updateGrid() {
+        for (let i = 0; i < gridX; i++) {
+            for (let j = 0; j < gridY; j++) {
+                $(`#GridCell_${i + 1}_${j + 1}`).text(gameBoard[i][j]);
+            }
         }
     }
-}
 
-function checkWin() {
-    // Check rows, columns, and diagonals for a win
-    for (let i = 0; i < gridX; i++) {
+    // Function to check for a win
+    function checkWin() {
+        for (let i = 0; i < gridX; i++) {
+            if (
+                gameBoard[i][0] !== '' &&
+                gameBoard[i].every((cell) => cell === gameBoard[i][0])
+            ) {
+                return true; // Win in row
+            }
+        }
+
+        for (let i = 0; i < gridY; i++) {
+            if (
+                gameBoard[0][i] !== '' &&
+                gameBoard.every((row) => row[i] === gameBoard[0][i])
+            ) {
+                return true; // Win in column
+            }
+        }
+
         if (
-            gameBoard[i][0] !== '' &&
-            gameBoard[i].every((cell) => cell === gameBoard[i][0])
+            gameBoard[0][0] !== '' &&
+            gameBoard.every((row, index) => row[index] === gameBoard[0][0])
         ) {
-            return true; // Win in row
+            return true; // Win in top-left to bottom-right diagonal
         }
-    }
 
-    for (let i = 0; i < gridY; i++) {
         if (
-            gameBoard[0][i] !== '' &&
-            gameBoard.every((row) => row[i] === gameBoard[0][i])
+            gameBoard[0][gridY - 1] !== '' &&
+            gameBoard.every(
+                (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
+            )
         ) {
-            return true; // Win in column
+            return true; // Win in top-right to bottom-left diagonal
         }
+
+        return false;
     }
 
-    // Check diagonals
-    if (
-        gameBoard[0][0] !== '' &&
-        gameBoard.every((row, index) => row[index] === gameBoard[0][0])
-    ) {
-        return true; // Win in top-left to bottom-right diagonal
+    // Function to check for a draw
+    function checkDraw() {
+        return gameBoard.every((row) => row.every((cell) => cell !== ''));
     }
 
-    if (
-        gameBoard[0][gridY - 1] !== '' &&
-        gameBoard.every(
-            (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
-        )
-    ) {
-        return true; // Win in top-right to bottom-left diagonal
+    // Function to switch players
+    function switchPlayer() {
+        currentPlayer = 1 - currentPlayer;
     }
 
-    return false;
-}
+    // Function to update the cells in the database
+    function updateCellInDatabase(row, col, symbol) {
+        // Implement the logic to update the cell in the database
+        // You can use Ajax to send a request to the server to update the database
+        // The server should handle the database update based on the move data (row, col, symbol)
+        const csrfToken = '{{ csrf_token }}';
+        const moveData = {
+            row: row,
+            col: col,
+            symbol: symbol,
+            csrfmiddlewaretoken: csrfToken,
 
-function checkDraw() {
-    // Check if the board is full (no empty cells)
-    return gameBoard.every((row) => row.every((cell) => cell !== ''));
-}
+        };
+const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
 
-function switchPlayer() {
-    currentPlayer = 1 - currentPlayer;
-}
+          const url = `${updateCellUrl}?game_idcode=${gameId}`;
 
-$(document).ready(function () {
-    // Créer une connexion WebSocket
-    const socket = new WebSocket(
-        `ws://${window.location.host}/ws/game/{{ game_id }}`
-    );
 
-    socket.addEventListener('open', (event) => {
-        console.log('WebSocket connection opened:', event);
-    });
 
-    socket.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);
-        // Faire quelque chose avec le message reçu, par exemple, mettre à jour la grille
-        console.log('WebSocket message received:', data);
-    });
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                row: row,
+                col: col,
+                symbol: symbol,
+                csrfmiddlewaretoken: csrfToken,
+                game_idcode: gameId,  // Pass the game_idcode in the data
+            },
+            success: function (response) {
+                // Handle the server response as needed
+            },
+            error: function () {
+                alert('Error updating the cell in the database. Please try again.');
+            },
+        });
+    }
 
-    // Loop to create cells and append them to the GameGrid
-    for (let i = 0; i < gridX; i++) {
-        for (let j = 0; j < gridY; j++) {
-            const newCell = $(`<div class="GridCells" id="GridCell_${i + 1}_${j + 1}"></div>`);
+    $(document).ready(function () {
+        const gameId = '{{ game_idcode }}';
 
-            // Append the new div to the parent div
-            $('#GameGrid').append(newCell);
+        // Function to create the grid
+        function createGrid() {
+            $('#GameGrid').empty();
 
-            // Click event handler
-            newCell.on('click', function () {
-                const cellId = $(this).attr('id');
-                const row = parseInt(cellId.charAt(9)) - 1;
-                const col = parseInt(cellId.charAt(11)) - 1;
-
-                // Check if the cell is already taken
-                if (gameBoard[row][col] === '') {
-                    gameBoard[row][col] = currentPlayer === 0 ? 'X' : 'O';
-
-                    // Update the grid
-                    updateGrid();
-
-                    // Check for a win
-                    if (checkWin()) {
-                        alert(`Player ${currentPlayer + 1} wins!`);
-                        // Reset the game or perform any other action
-                    } else if (checkDraw()) {
-                        alert('It\'s a draw!');
-                        // Reset the game or perform any other action
-                    } else {
-                        // Switch players
-                        switchPlayer();
-                    }
-
-                    // Envoyer un message WebSocket avec les données du coup
-                    const moveData = {
-                        row: row,
-                        col: col,
-                        symbol: gameBoard[row][col],
-                    };
-
-                    socket.send(
-                        JSON.stringify({
-                            type: 'game.move',
-                            move_data: moveData,
-                        })
-                    );
-                } else {
-                    alert('Cell already taken! Choose another.');
+            for (let i = 0; i < gridX; i++) {
+                for (let j = 0; j < gridY; j++) {
+                    const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
+                    $('#GameGrid').append(newCell);
                 }
-            });
+            }
         }
-    }
-});
 
+        // Use event delegation to handle clicks on dynamic cells
+        $('#GameGrid').on('click', '.GridCell', function () {
+            const row = parseInt($(this).attr('data-row'));
+            const col = parseInt($(this).attr('data-col'));
+
+            if (gameBoard[row][col] === '') {
+                gameBoard[row][col] = currentPlayer === 0 ? 'X' : 'O';
+
+                // Update the grid
+                updateGrid();
+
+                // Update the cell in the database
+                updateCellInDatabase(row, col, gameBoard[row][col]);
+
+                if (checkWin()) {
+                    alert(`Player ${currentPlayer + 1} wins!`);
+                    // Reset the game or perform any other action
+                } else if (checkDraw()) {
+                    alert('It\'s a draw!');
+                    // Reset the game or perform any other action
+                } else {
+                    switchPlayer();
+                }
+            } else {
+                alert('Cell already taken! Choose another.');
+            }
+        });
+
+        // Call createGrid function to generate the grid
+        createGrid();
+
+        // Your other JavaScript code
+    });
 </script>
+
 
 </body>
 </html>

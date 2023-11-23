@@ -2,13 +2,13 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
-
+from django.shortcuts import HttpResponse, get_object_or_404
 from .forms import GameForm, JoinGameForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from PROJETWEB import urls
 
-from .models import Game
+from .models import Game, Cell, Grid
 
 
 def create_game(request):
@@ -141,55 +141,83 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
 
 # views.py
 
-from channels.generic.websocket import AsyncWebsocketConsumer
+
 import json
 
 
-class GameConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        await self.accept()
+def game_scene(request, player_1, player_2, game_idcode, game_private):
+    # Look up the game in the database based on game_idcode
+    game = get_object_or_404(Game, id_code=game_idcode)
 
-    async def disconnect(self, close_code):
-        pass
+    # You can now access additional settings from the game instance
+    game_x = game.grid_x
+    game_y = game.grid_y
+    game_alignment = game.alignment
 
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        action = text_data_json.get('action', '')
+    return render(request, 'GameScene.html', {
+        'player_1': player_1,
+        'player_2': player_2,
+        'game_idcode': game_idcode,
+        'game_private': game_private,
+        'game_x': game_x,
+        'game_y': game_y,
+        'game_alignment': game_alignment,
+    })
 
-        # Traitez le message en fonction de l'action
-        if action == 'move':
-            await self.handle_move(text_data_json)
-        elif action == 'chat_message':
-            await self.handle_chat_message(text_data_json)
-        # Ajoutez d'autres actions au besoin
+def handle_player_move(request, game_id):
+    if request.method == 'POST':
+        row = int(request.POST.get('row'))
+        col = int(request.POST.get('col'))
+        player = int(request.POST.get('player'))
 
-    async def handle_move(self, data):
-        # Exemple de traitement d'une action "move"
-        row = data.get('row', 0)
-        col = data.get('col', 0)
+        # Look up the game in the database based on game_id
+        game = get_object_or_404(Game, id=game_id)
 
-        # Effectuez le traitement nécessaire pour le mouvement dans le jeu
-        # ...
+        # Check if it's the correct player's turn
+        if game.current_player != player:
+            return JsonResponse({'validMove': False, 'error': 'It\'s not your turn.'})
 
-        # Envoyez une réponse
-        await self.send_response('move', {'success': True})
+        # Check if the cell is empty
+        if game.board[row][col] != '':
+            return JsonResponse({'validMove': False, 'error': 'Cell already taken.'})
 
-    async def handle_chat_message(self, data):
-        # Exemple de traitement d'une action "chat_message"
-        message = data.get('message', '')
+        # Update the game state (this is a simplified example)
+        game.board[row][col] = 'X' if player == 1 else 'O'
+        game.current_player = 3 - player  # Toggle between 1 and 2
 
-        # Effectuez le traitement nécessaire pour les messages de chat
-        # ...
+        # Check for a winner or draw (you need to implement this logic based on your game rules)
+        winner = check_winner(game.board)
+        draw = check_draw(game.board)
 
-        # Envoyez une réponse
-        await self.send_response('chat_message', {'success': True})
+        game.save()
 
-    async def send_response(self, action, data):
-        # Envoyez une réponse au frontend avec l'action spécifiée et les données associées
-        response_data = {'action': action, 'data': data}
-        await self.send(text_data=json.dumps(response_data))
+        return JsonResponse({'validMove': True, 'winner': winner, 'draw': draw})
+    else:
+        return JsonResponse({'validMove': False, 'error': 'Invalid request method'})
 
+def check_winner(board):
+    # Check rows
+    for row in board:
+        if all(cell == row[0] and cell != '' for cell in row):
+            return int(row[0])  # Player number who won
 
+    # Check columns
+    for col in range(len(board[0])):
+        if all(row[col] == board[0][col] and board[0][col] != '' for row in board):
+            return int(board[0][col])  # Player number who won
+
+    # Check diagonals
+    if all(board[i][i] == board[0][0] and board[0][0] != '' for i in range(len(board))):
+        return int(board[0][0])  # Player number who won
+
+    if all(board[i][len(board) - 1 - i] == board[0][len(board) - 1] and board[0][len(board) - 1] != '' for i in range(len(board))):
+        return int(board[0][len(board) - 1])  # Player number who won
+
+    return None  # No winner
+
+def check_draw(board):
+    # Check if there are any empty cells left
+    return all(cell != '' for row in board for cell in row)
 def play(request):
 
 
@@ -198,9 +226,32 @@ def play(request):
 
 def generategametable(request):
     # Récupérer les données du tableau de scores
-    games = Game.objects.filter(player_2__isnull=True,isfinished__isnull=True, private=False)
+    games = Game.objects.filter(player_2__isnull=True, private=False)
 
     # Convertir le QuerySet en une liste de dictionnaires
     scoreboard_data = [{'code': game.id_code, 'grid_X': game.grid_x,'grid_Y': game.grid_y,'alignement': game.alignment,} for game in games]
 
     return JsonResponse(scoreboard_data, safe=False)
+
+def update_cell_in_database(request, game_idcode):
+    if request.method == 'POST':
+        row = int(request.POST.get('row'))
+        col = int(request.POST.get('col'))
+        symbol = request.POST.get('symbol')
+
+        # Get the game object
+        game = get_object_or_404(Game, id_code=game_idcode)
+
+        # Get the grid associated with the game
+        grid = get_object_or_404(Grid, game=game)
+
+        # Get the cell associated with the grid, row, and col
+        cell = get_object_or_404(Cell, grid=grid, x_position=row, y_position=col)
+
+        # Update the corresponding cell in the database
+        cell.value = 1
+        cell.save()
+
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=400)
