@@ -10,27 +10,43 @@ from PROJETWEB import urls
 
 from .models import Game, Cell, Grid
 
+from django.http import JsonResponse
+
 
 def create_game(request):
     if request.method == 'POST':
         form = GameForm(request.POST)
         if form.is_valid():
             # Create a new Game instance
-            game = form.save(commit=False)
+            errors = {}
+            grid_x = request.POST.get('grid_x')
+            grid_y = request.POST.get('grid_y')
+            alignment = request.POST.get('alignment')
 
-            # Set player_1 to the current user (the one who created the game)
-            game.player_1 = request.user
+            if grid_x and (int(grid_x) < 3 or int(grid_x) > 12):
+                errors['grid_x'] = 'Grid X must be between 3 and 12.'
 
-            # Set player_2 to None initially
-            game.player_2 = None
+            if grid_y and (int(grid_y) < 3 or int(grid_y) > 12):
+                errors['grid_y'] = 'Grid Y must be between 3 and 12.'
 
-            # Save the game instance
-            game.save()
+            if alignment and (int(alignment) > max(int(grid_x), int(grid_y)) or int(alignment) < 3):
+                errors['alignment'] = 'Alignment should be between 3 and X/Y.'
 
-            request.session['game_code'] = game.id_code
+            if not errors:
+                # Create and save the Game instance
+                game = form.save(commit=False)
+                game.player_1 = request.user
+                game.player_2 = None
+                game.save()
 
-            # Redirect to a success page or any other appropriate action
-            return JsonResponse({'success': True, 'redirect': 'waiting-page'})
+                request.session['game_code'] = game.id_code
+
+                # Redirect to a success page or any other appropriate action
+                return JsonResponse({'success': True, 'redirect': 'waiting-page'})
+            else:
+                # Return JSON data for custom errors
+                print(errors)
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
         else:
             # Return JSON data for form errors
             return JsonResponse({'success': False, 'errors': form.errors.as_json()}, status=400)
@@ -164,6 +180,7 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         'game_alignment': game_alignment,
     })
 
+
 def handle_player_move(request, game_id):
     if request.method == 'POST':
         row = int(request.POST.get('row'))
@@ -195,6 +212,7 @@ def handle_player_move(request, game_id):
     else:
         return JsonResponse({'validMove': False, 'error': 'Invalid request method'})
 
+
 def check_winner(board):
     # Check rows
     for row in board:
@@ -210,17 +228,19 @@ def check_winner(board):
     if all(board[i][i] == board[0][0] and board[0][0] != '' for i in range(len(board))):
         return int(board[0][0])  # Player number who won
 
-    if all(board[i][len(board) - 1 - i] == board[0][len(board) - 1] and board[0][len(board) - 1] != '' for i in range(len(board))):
+    if all(board[i][len(board) - 1 - i] == board[0][len(board) - 1] and board[0][len(board) - 1] != '' for i in
+           range(len(board))):
         return int(board[0][len(board) - 1])  # Player number who won
 
     return None  # No winner
 
+
 def check_draw(board):
     # Check if there are any empty cells left
     return all(cell != '' for row in board for cell in row)
+
+
 def play(request):
-
-
     return render(request, 'Play.html')
 
 
@@ -229,9 +249,12 @@ def generategametable(request):
     games = Game.objects.filter(player_2__isnull=True, private=False)
 
     # Convertir le QuerySet en une liste de dictionnaires
-    scoreboard_data = [{'code': game.id_code, 'grid_X': game.grid_x,'grid_Y': game.grid_y,'alignement': game.alignment,} for game in games]
+    scoreboard_data = [
+        {'code': game.id_code, 'grid_X': game.grid_x, 'grid_Y': game.grid_y, 'alignement': game.alignment, } for game in
+        games]
 
     return JsonResponse(scoreboard_data, safe=False)
+
 
 def update_cell_in_database(request, game_idcode):
     if request.method == 'POST':
@@ -255,6 +278,8 @@ def update_cell_in_database(request, game_idcode):
         return HttpResponse(status=200)
 
     return HttpResponse(status=400)
+
+
 def getCellValueFromDatabase(request, game_idcode):
     try:
         row = int(request.POST.get('row', 0))
