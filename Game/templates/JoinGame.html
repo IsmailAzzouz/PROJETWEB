@@ -1,61 +1,46 @@
-<!-- join_game.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join Game</title>
-</head>
-<body>
+{% extends "BASE.html" %}
+{% load static %}
 
-<h1>Join a Game</h1>
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_JoinGame.css' %}">
+{% endblock %}
 
-<!-- join_game.html -->
-<!-- join_game.html -->
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% block JS %}
+    <script src="{% static 'JS/SCRIPT_JoiningGame.js' %}"></script>
+{% endblock %}
 
-<!-- Your form HTML -->
-<form id="join-game-form" method="post" enctype="multipart/form-data">
+{% block content %}
+    <div class="FormJoinGame">
+
+    <h1 class="title">Join a Game</h1>
+        <div class="CONTAINER">
+
+            <form id="join-game-form" method="post" enctype="multipart/form-data" class="leform">
     {% csrf_token %}
     <label for="game-code">Enter Game Code:</label>
-    <input type="text" id="game-code" name="game_code" required>
+                <br>
+    <input type="text" id="game-code" name="game_code" required><br>
     <button type="button" id="join-game-btn">Join Game</button>
 </form>
+        </div>
 
-<!-- jQuery script for asynchronous form submission -->
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block script_variable %}
 <script>
-    $(document).ready(function () {
-        $("#join-game-btn").click(function () {
-            var gameCode = $("#game-code").val();
-
-            // Get the CSRF token from the cookie
-            var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
-
-            $.ajax({
-                type: 'POST',
-                url: '{% url "join-game" %}',  // Replace with the actual URL for joining a game
-                data: {game_code: gameCode},
-                dataType: 'json',
-                headers: {"X-CSRFToken": csrftoken},  // Include the CSRF token in the headers
-                success: function (data) {
-                    if (data.success) {
-                        // Redirect to the game page upon successful join
-                        window.location.href = '{% url "waiting-page" %}';  // Replace with the actual URL for waiting
-                    } else {
-                        // Handle errors (e.g., display error messages)
-                        console.log('Error joining the game:', data.message);
-                    }
-                },
-                error: function (data) {
-                    console.log('Error joining the game');
-                    console.log(data);
-                }
-            });
-        });
-    });
-</script>
+    const url_joining = '{% url "join-game" %}';
+    const url_waiting = '{% url "waiting-page" %}';
+    </script>
+{% endblock %}
 
 
-</body>
-</html>
+
+
+
+
+

@@ -118,13 +118,14 @@ def join_game(request):
                 # Store the game code in the session
                 request.session['game_code'] = game_code
                 return JsonResponse({'success': True})
+            
             else:
                 return JsonResponse({'success': False, 'message': 'Game is already full'})
 
         except Game.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Game not found'}, status=404)
+            return JsonResponse({'success': False, 'message': 'Game not found'})
     else:
-        return JsonResponse({'success': False, 'message': 'Invalid form data'}, status=400)
+        return JsonResponse({'success': False, 'message': 'Please enter a code'}) #if return status 404 can't get the message form the json response and show an error in console
 
 
 def waiting_page(request):
