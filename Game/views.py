@@ -118,7 +118,7 @@ def join_game(request):
                 # Store the game code in the session
                 request.session['game_code'] = game_code
                 return JsonResponse({'success': True})
-            
+
             else:
                 return JsonResponse({'success': False, 'message': 'Game is already full'})
 
