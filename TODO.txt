@@ -12,4 +12,5 @@ TODO:
     Make a CSS for the game
     Make the scoreBoard
     adapt
-
+    A game need a title
+    Game code needs to be displayed in the wainting page

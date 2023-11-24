@@ -46,7 +46,7 @@ def create_game(request):
             else:
                 # Return JSON data for custom errors
                 print(errors)
-                return JsonResponse({'success': False, 'errors': errors}, status=400)
+                return JsonResponse({'success': False, 'errors': errors})
         else:
             # Return JSON data for form errors
 
