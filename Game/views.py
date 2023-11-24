@@ -49,7 +49,8 @@ def create_game(request):
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
         else:
             # Return JSON data for form errors
-            return JsonResponse({'success': False, 'errors': form.errors.as_json()}, status=400)
+
+            return JsonResponse({'success': False, 'errors': form.errors.as_json()})
     else:
         form = GameForm()
 
