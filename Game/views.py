@@ -126,7 +126,8 @@ def join_game(request):
         except Game.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Game not found'})
     else:
-        return JsonResponse({'success': False, 'message': 'Please enter a code'}) #if return status 404 can't get the message form the json response and show an error in console
+        return JsonResponse({'success': False,
+                             'message': 'Please enter a code'})  # if return status 404 can't get the message form the json response and show an error in console
 
 
 def waiting_page(request):
@@ -274,7 +275,8 @@ def update_cell_in_database(request, game_idcode):
         cell = get_object_or_404(Cell, grid=grid, x_position=row, y_position=col)
 
         # Update the corresponding cell in the database
-        cell.value = 1
+        cell.value = symbol
+        print("symbol :" , symbol + "\n row : " , row , "\n col : " ,  col)
         cell.save()
 
         return HttpResponse(status=200)
