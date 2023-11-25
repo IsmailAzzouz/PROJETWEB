@@ -172,15 +172,17 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
     game_x = game.grid_x
     game_y = game.grid_y
     game_alignment = game.alignment
-
+    player_1_username = game.player_1.username
+    player_2_username = game.player_2.username
+    current_user_role = 'Player 1' if request.user.username == player_1_username else 'Player 2'
     return render(request, 'GameScene.html', {
-        'player_1': player_1,
-        'player_2': player_2,
+        'player_1': player_1_username,
+        'player_2': player_2_username,
         'game_idcode': game_idcode,
         'game_private': game_private,
         'game_x': game_x,
         'game_y': game_y,
-        'game_alignment': game_alignment,
+        'current_user_role': current_user_role,
     })
 
 

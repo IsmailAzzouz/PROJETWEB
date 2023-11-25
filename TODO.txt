@@ -14,3 +14,4 @@ TODO:
     adapt
     A game need a title
     Game code needs to be displayed in the wainting page
+    reucper la version de chatgpt qui verifie si grid 1 et 2 sont les meme ensuite crreer une variable me= si player one 0 sinon 1 si current player =! de me i can't click but if grid 1 and 2 diff i can play
