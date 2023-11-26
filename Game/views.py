@@ -37,6 +37,7 @@ def create_game(request):
                 game = form.save(commit=False)
                 game.player_1 = request.user
                 game.player_2 = None
+                game.nextplayer = request.user
                 game.save()
 
                 request.session['game_code'] = game.id_code
@@ -298,3 +299,26 @@ def getCellValueFromDatabase(request, game_idcode):
     cell = get_object_or_404(Cell, grid=grid, x_position=row, y_position=col)
 
     return JsonResponse({'cellValue': cell.value})
+
+def getnextplayerturn(request, game_idcode):
+    game = get_object_or_404(Game, id_code=game_idcode)
+    if request.user == game.player_1:
+        game.nextplayer = game.player_2
+        game.save()
+        nextplayer = game.nextplayer.username
+        print(nextplayer)
+        return JsonResponse({'nextplayer': nextplayer})
+    else:
+        game.nextplayer = game.player_1
+        game.save()
+        nextplayer = game.nextplayer.username
+        print(nextplayer)
+        return JsonResponse({'nextplayer': nextplayer})
+
+
+def checkturn(request, game_idcode):
+    game = get_object_or_404(Game, id_code=game_idcode)
+    nextplayer = game.nextplayer.username
+    return JsonResponse({'nextplayer': nextplayer})
+
+

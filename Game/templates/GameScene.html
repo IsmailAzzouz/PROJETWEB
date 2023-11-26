@@ -64,18 +64,23 @@
  <h1>
     {{ player_2 }}
 </h1>
+<h1>
+{{ user.username }}
+</h1>
     <div id="GameGrid"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    let gridX = {{ game_x }};
+  <script>
+          let gridX = {{ game_x }};
     let gridY = {{ game_y }};
     let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-    let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+    //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
     let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
     const gameId = '{{ game_idcode }}';
-
-    function areGridsEqual(grid1, grid2) {
+    const playerusername = '{{user.username}}';
+    let nextplayerturn='{{player_1}}';
+    let whosturn= '{{player_1}}';
+    /*function areGridsEqual(grid1, grid2) {
         for (let i = 0; i < gridX; i++) {
             for (let j = 0; j < gridY; j++) {
                 if (grid1[i][j] !== grid2[i][j]) {
@@ -85,15 +90,9 @@
         }
         return true;
     }
-
+*/
     function updateCellInDatabase(row, col, symbol) {
         const csrfToken = '{{ csrf_token }}';
-        const moveData = {
-            row: row,
-            col: col,
-            symbol: symbol,
-            csrfmiddlewaretoken: csrfToken,
-        };
         const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
         const url = `${updateCellUrl}?game_idcode=${gameId}`;
 
@@ -125,7 +124,9 @@
                 if (cellValue === -1 || cellValue === '') {
                     cellElement.text('');
                 } else {
-                    cellElement.text(cellValue === '0' ? 'X' : 'O');
+                    let value= cellValue === '0' ? 'X' : 'O';
+                    cellElement.text(value);
+                    gameBoard[i][j]=value;
                 }
             }
         }
@@ -174,11 +175,70 @@
     }
 
     function switchPlayer() {
-        currentPlayer = (currentPlayer === '0') ? '1' : '0';
+        const csrfToken = '{{ csrf_token }}';
+        const getnextplayerturn = '{% url "getnextplayerturn" game_idcode=game_idcode %}'; //nom de la bonne view
+        const getnextplayerturnlurl = `${getnextplayerturn}?game_idcode=${gameId}`; //url a modifier
+
+        $.ajax({
+            url: getnextplayerturnlurl,
+            method: 'POST',
+            data: {
+                game_code: gameId,
+                playerusername : playerusername,
+                csrfmiddlewaretoken: csrfToken,
+            },
+            async: false,
+            success: function (response) {
+                if (response.nextplayer !== undefined) {
+                    console.log(response.nextplayer);
+
+                } else {
+                    alert('Error fetching next player from db.');
+                }
+            },
+            error: function () {
+                //alert('ERROR '+ " switch player");
+            },
+        });
+
+
+    }
+
+    function checkturn(){
+        const csrfToken = '{{ csrf_token }}';
+        const checkturn = '{% url "checkturn" game_idcode=game_idcode %}'; //nom de la bonne view
+        const checkturnurl = `${checkturn}?game_idcode=${gameId}`; //url a modifier
+
+        $.ajax({
+            url: checkturnurl,
+            method: 'POST',
+            data: {
+                game_code: gameId,
+                csrfmiddlewaretoken: csrfToken,
+            },
+            async: false,
+            success: function (response) {
+                if (response.nextplayer !== undefined) {
+            console.log(response.nextplayer);
+            let turned = response.nextplayer;
+                console.log(turned + " it s");
+                        whosturn = response.nextplayer;
+
+                } else {
+                    alert(error + ' test error')
+                    return "error";
+                }
+            },
+            error: function () {
+                alert('ERROR check turn');
+                whosturn = "error";
+            },
+        });
+
     }
 
     $(document).ready(function () {
-        const gameId = '{{ game_idcode }}';
+
 
         function createGrid() {
             $('#GameGrid').empty();
@@ -193,7 +253,9 @@
                     if (cellValue === -1 || cellValue === '') {
                         newCell.text('');
                     } else {
-                        newCell.text(cellValue === '0' ? 'X' : 'O');
+                        let value = cellValue === '0' ? 'X' : 'O';
+                        newCell.text(value);
+                        gameBoard[i][j]=value;
                     }
                 }
             }
@@ -203,12 +265,9 @@
             const row = parseInt($(this).attr('data-row'));
             const col = parseInt($(this).attr('data-col'));
 
-            if (!areGridsEqual(gameBoard, prevGameBoard)) {
-                alert("Wait for the other player to make a move.");
-                return;
-            }
-
-            if (gameBoard[row][col] === '') {
+            console.log(whosturn + " test");
+            if ( whosturn === playerusername) {
+                if (gameBoard[row][col] === '') {
                 gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
                 updateGrid();
                 updateCellInDatabase(row, col, currentPlayer);
@@ -220,16 +279,23 @@
                 } else if (checkDraw()) {
                     alert('It\'s a draw!');
                 } else {
-                    switchPlayer();
+                    nextplayerturn=switchPlayer();
                 }
             } else {
                 alert('Cell already taken! Choose another.');
             }
+            }
+            else{
+                alert("this cell is not your's to take")
+            }
+
+
         });
 
         function refreshGrid() {
             createGrid();
             updateGrid();
+            checkturn();
         }
 
         setInterval(refreshGrid, 10);
@@ -265,8 +331,6 @@
 
         return cellValue;
     }
-</script>
-
-
+  </script>
   </body>
 </html>

@@ -48,4 +48,6 @@ urlpatterns = [
                   path('gamescene/move/update_cell_in_database/<str:game_idcode>/', update_cell_in_database,
                        name='update_cell_in_database'),
     path('gamescene/move/get_cell_value_from_database/<str:game_idcode>/',getCellValueFromDatabase, name='get_cell_value_from_database'),
+path('gamescene/move/getplayerturn/<str:game_idcode>/',getnextplayerturn, name='getnextplayerturn'),
+path('gamescene/move/checkturn/<str:game_idcode>/',checkturn, name='checkturn'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

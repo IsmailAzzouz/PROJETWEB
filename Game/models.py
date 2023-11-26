@@ -21,7 +21,8 @@ class Game(models.Model):
                                  null=True, blank=True, default="null")
     winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='winner_games',
                                db_column='winner')
-
+    nextplayer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='nextplayer_games',
+                               db_column='nextplayer')
     def __str__(self):
         return f"Game {self.id_code}"
 
