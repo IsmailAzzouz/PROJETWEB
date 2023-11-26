@@ -132,7 +132,7 @@ def join_game(request):
 
 
 def waiting_page(request):
-    return render(request, 'WaitingforPlayer.html')
+    return render(request, 'WaitingforPlayer.html', context={'idcode': request.session['game_code']})
 
 
 def joining_page(request):

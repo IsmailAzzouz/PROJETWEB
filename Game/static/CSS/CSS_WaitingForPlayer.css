@@ -21,6 +21,14 @@
 
 
 }
+.gamecode{
+    position: absolute;
+    height: 25px;
+    width: fit-content;
+    top: calc(50% - 25px);
+    left: calc(50% - 100px);
+    text-align: center;
+}
 @keyframes dots {
     0%, 20% {
         content: ' _';
