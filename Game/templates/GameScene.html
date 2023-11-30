@@ -58,279 +58,344 @@
   </head>
   <body>
     <h1>Tic-Tac-Toe Game</h1>
-    <h1>
-    {{ player_1 }}
-</h1>
- <h1>
-    {{ player_2 }}
-</h1>
-<h1>
-{{ user.username }}
-</h1>
+    <h1>{{ player_1 }}</h1>
+    <h1>{{ player_2 }}</h1>
+    <h1>{{ user.username }}</h1>
     <div id="GameGrid"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-          let gridX = {{ game_x }};
-    let gridY = {{ game_y }};
-    let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-    //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-    let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
-    const gameId = '{{ game_idcode }}';
-    const playerusername = '{{user.username}}';
-    let nextplayerturn='{{player_1}}';
-    let whosturn= '{{player_1}}';
-    /*function areGridsEqual(grid1, grid2) {
-        for (let i = 0; i < gridX; i++) {
-            for (let j = 0; j < gridY; j++) {
-                if (grid1[i][j] !== grid2[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-*/
-    function updateCellInDatabase(row, col, symbol) {
-        const csrfToken = '{{ csrf_token }}';
-        const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
-        const url = `${updateCellUrl}?game_idcode=${gameId}`;
+    <script>
 
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: {
-                row: row,
-                col: col,
-                symbol: symbol,
-                csrfmiddlewaretoken: csrfToken,
-                game_idcode: gameId,
-            },
-            success: function (response) {
-                // Handle the server response as needed
-            },
-            error: function () {
-                alert('Error updating the cell in the database. Please try again.');
-            },
-        });
-    }
+            let gridX = {{ game_x }};
+          let gridY = {{ game_y }};
+          let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+          //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+          let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
+          const gameId = '{{ game_idcode }}';
+          const playerusername = '{{user.username}}';
+          let nextplayerturn='{{player_1}}';
+          let whosturn= '{{player_1}}';
+          alert("test");
+          /*function areGridsEqual(grid1, grid2) {
+              for (let i = 0; i < gridX; i++) {
+                  for (let j = 0; j < gridY; j++) {
+                      if (grid1[i][j] !== grid2[i][j]) {
+                          return false;
+                      }
+                  }
+              }
+              return true;
+          }
+      */
+          function updateCellInDatabase(row, col, symbol) {
+              const csrfToken = '{{ csrf_token }}';
+              const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
+              const url = `${updateCellUrl}?game_idcode=${gameId}`;
 
-    function updateGrid() {
-        for (let i = 0; i < gridX; i++) {
-            for (let j = 0; j < gridY; j++) {
-                const cellValue = getCellValueFromDatabase(i, j);
-                const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
+              $.ajax({
+                  url: url,
+                  method: 'POST',
+                  data: {
+                      row: row,
+                      col: col,
+                      symbol: symbol,
+                      csrfmiddlewaretoken: csrfToken,
+                      game_idcode: gameId,
+                  },
+                  success: function (response) {
+                      // Handle the server response as needed
+                  },
+                  error: function () {
+                      alert('Error updating the cell in the database. Please try again.');
+                  },
+              });
+          }
 
-                if (cellValue === -1 || cellValue === '') {
-                    cellElement.text('');
-                } else {
-                    let value= cellValue === '0' ? 'X' : 'O';
-                    cellElement.text(value);
-                    gameBoard[i][j]=value;
-                }
-            }
-        }
-    }
+          function updateGrid() {
+              for (let i = 0; i < gridX; i++) {
+                  for (let j = 0; j < gridY; j++) {
+                      const cellValue = getCellValueFromDatabase(i, j);
+                      const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
 
-    function checkWin() {
-        for (let i = 0; i < gridX; i++) {
-            if (
-                gameBoard[i][0] !== '' &&
-                gameBoard[i].every((cell) => cell === gameBoard[i][0])
-            ) {
-                return true;
-            }
-        }
+                      if (cellValue === -1 || cellValue === '') {
+                          cellElement.text('');
+                      } else {
+                          let value= cellValue === '0' ? 'X' : 'O';
+                          cellElement.text(value);
+                          gameBoard[i][j]=value;
+                      }
+                  }
+              }
+          }
 
-        for (let i = 0; i < gridY; i++) {
-            if (
-                gameBoard[0][i] !== '' &&
-                gameBoard.every((row) => row[i] === gameBoard[0][i])
-            ) {
-                return true;
-            }
-        }
+          function checkWin() {
+              for (let i = 0; i < gridX; i++) {
+                  if (
+                      gameBoard[i][0] !== '' &&
+                      gameBoard[i].every((cell) => cell === gameBoard[i][0])
+                  ) {
+                      return true;
+                  }
+              }
 
-        if (
-            gameBoard[0][0] !== '' &&
-            gameBoard.every((row, index) => row[index] === gameBoard[0][0])
-        ) {
-            return true;
-        }
+              for (let i = 0; i < gridY; i++) {
+                  if (
+                      gameBoard[0][i] !== '' &&
+                      gameBoard.every((row) => row[i] === gameBoard[0][i])
+                  ) {
+                      return true;
+                  }
+              }
 
-        if (
-            gameBoard[0][gridY - 1] !== '' &&
-            gameBoard.every(
-                (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
-            )
-        ) {
-            return true;
-        }
+              if (
+                  gameBoard[0][0] !== '' &&
+                  gameBoard.every((row, index) => row[index] === gameBoard[0][0])
+              ) {
+                  return true;
+              }
 
-        return false;
-    }
+              if (
+                  gameBoard[0][gridY - 1] !== '' &&
+                  gameBoard.every(
+                      (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
+                  )
+              ) {
+                  return true;
+              }
 
-    function checkDraw() {
-        return gameBoard.every((row) => row.every((cell) => cell !== ''));
-    }
+              return false;
+          }
 
-    function switchPlayer() {
-        const csrfToken = '{{ csrf_token }}';
-        const getnextplayerturn = '{% url "getnextplayerturn" game_idcode=game_idcode %}'; //nom de la bonne view
-        const getnextplayerturnlurl = `${getnextplayerturn}?game_idcode=${gameId}`; //url a modifier
+          function checkDraw() {
+              return gameBoard.every((row) => row.every((cell) => cell !== ''));
+          }
 
-        $.ajax({
-            url: getnextplayerturnlurl,
-            method: 'POST',
-            data: {
-                game_code: gameId,
-                playerusername : playerusername,
-                csrfmiddlewaretoken: csrfToken,
-            },
-            async: false,
-            success: function (response) {
-                if (response.nextplayer !== undefined) {
-                    console.log(response.nextplayer);
+          function switchPlayer() {
+              const csrfToken = '{{ csrf_token }}';
+              const getnextplayerturn = '{% url "getnextplayerturn" game_idcode=game_idcode %}'; //nom de la bonne view
+              const getnextplayerturnlurl = `${getnextplayerturn}?game_idcode=${gameId}`; //url a modifier
 
-                } else {
-                    alert('Error fetching next player from db.');
-                }
-            },
-            error: function () {
-                //alert('ERROR '+ " switch player");
-            },
-        });
+              $.ajax({
+                  url: getnextplayerturnlurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+                      playerusername : playerusername,
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.nextplayer !== undefined) {
+                          console.log(response.nextplayer);
 
-
-    }
-
-    function checkturn(){
-        const csrfToken = '{{ csrf_token }}';
-        const checkturn = '{% url "checkturn" game_idcode=game_idcode %}'; //nom de la bonne view
-        const checkturnurl = `${checkturn}?game_idcode=${gameId}`; //url a modifier
-
-        $.ajax({
-            url: checkturnurl,
-            method: 'POST',
-            data: {
-                game_code: gameId,
-                csrfmiddlewaretoken: csrfToken,
-            },
-            async: false,
-            success: function (response) {
-                if (response.nextplayer !== undefined) {
-            console.log(response.nextplayer);
-            let turned = response.nextplayer;
-                console.log(turned + " it s");
-                        whosturn = response.nextplayer;
-
-                } else {
-                    alert(error + ' test error')
-                    return "error";
-                }
-            },
-            error: function () {
-                alert('ERROR check turn');
-                whosturn = "error";
-            },
-        });
-
-    }
-
-    $(document).ready(function () {
+                      } else {
+                          alert('Error fetching next player from db.');
+                      }
+                  },
+                  error: function () {
+                      //alert('ERROR '+ " switch player");
+                  },
+              });
 
 
-        function createGrid() {
-            $('#GameGrid').empty();
+          }
 
-            for (let i = 0; i < gridX; i++) {
-                for (let j = 0; j < gridY; j++) {
-                    const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
-                    $('#GameGrid').append(newCell);
+          function checkturn(){
+              const csrfToken = '{{ csrf_token }}';
+              const checkturn = '{% url "checkturn" game_idcode=game_idcode %}'; //nom de la bonne view
+              const checkturnurl = `${checkturn}?game_idcode=${gameId}`; //url a modifier
 
-                    let cellValue = getCellValueFromDatabase(i, j);
+              $.ajax({
+                  url: checkturnurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.nextplayer !== undefined) {
+                  console.log(response.nextplayer);
+                  let turned = response.nextplayer;
+                      console.log(turned + " it s");
+                              whosturn = response.nextplayer;
 
-                    if (cellValue === -1 || cellValue === '') {
-                        newCell.text('');
-                    } else {
-                        let value = cellValue === '0' ? 'X' : 'O';
-                        newCell.text(value);
-                        gameBoard[i][j]=value;
-                    }
-                }
-            }
-        }
+                      } else {
+                          alert(error + ' test error')
+                          return "error";
+                      }
+                  },
+                  error: function () {
+                      alert('ERROR check turn');
+                      whosturn = "error";
+                  },
+              });
 
-        $('#GameGrid').on('click', '.GridCell', function () {
-            const row = parseInt($(this).attr('data-row'));
-            const col = parseInt($(this).attr('data-col'));
+          }
+          function setwinner(){
+              const csrfToken = '{{ csrf_token }}';
+              const setwinner = '{% url "setwinner" game_idcode=game_idcode %}'; //nom de la bonne view
+              const setwinnerurl = `${setwinner}?game_idcode=${gameId}`; //url a modifier
 
-            console.log(whosturn + " test");
-            if ( whosturn === playerusername) {
-                if (gameBoard[row][col] === '') {
-                gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
-                updateGrid();
-                updateCellInDatabase(row, col, currentPlayer);
+              $.ajax({
+                  url: setwinnerurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
 
-                prevGameBoard = gameBoard.map(row => row.slice());
-
-                if (checkWin()) {
-                    alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
-                } else if (checkDraw()) {
-                    alert('It\'s a draw!');
-                } else {
-                    nextplayerturn=switchPlayer();
-                }
-            } else {
-                alert('Cell already taken! Choose another.');
-            }
-            }
-            else{
-                alert("this cell is not your's to take")
-            }
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.message !== undefined) {
+                  console.log(response.message);
 
 
-        });
 
-        function refreshGrid() {
-            createGrid();
-            updateGrid();
-            checkturn();
-        }
+                      } else {
+                          alert(error + ' test error')
+                          return "error";
+                      }
+                  },
+                  error: function () {
+                      alert('ERROR check turn');
+                      //whosturn = "error";
+                  },
+              });
 
-        setInterval(refreshGrid, 10);
-    });
+          }
+          function checkwinner(){
+              const csrfToken = '{{ csrf_token }}';
+              const checkwinner = '{% url "checkwinner" game_idcode=game_idcode %}'; //nom de la bonne view
+              const checkwinnerurl = `${checkwinner}?game_idcode=${gameId}`; //url a modifier
 
-    function getCellValueFromDatabase(row, col) {
-        const csrfToken = '{{ csrf_token }}';
-        let cellValue = -1;
-        const getCellValueFromDatabaseUrl = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
-        const cellurl = `${getCellValueFromDatabaseUrl}?game_idcode=${gameId}`;
+              $.ajax({
+                  url: checkwinnerurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.winner !== undefined) {
 
-        $.ajax({
-            url: cellurl,
-            method: 'POST',
-            data: {
-                game_code: gameId,
-                row: row,
-                col: col,
-                csrfmiddlewaretoken: csrfToken,
-            },
-            async: false,
-            success: function (response) {
-                if (response.cellValue !== undefined) {
-                    cellValue = response.cellValue;
-                } else {
-                    alert('Error fetching cell value from the database. Please try again.');
-                }
-            },
-            error: function () {
-                alert('Error fetching cell value from the database. Please try again.');
-            },
-        });
+      let winner = response.winner;
+                  console.log(response.winner);
+                  if(winner != "none"){
+                      alert(winner + "won the game");
+                  }
 
-        return cellValue;
-    }
-  </script>
+
+                      } else {
+                          alert(response.winner)
+
+                      }
+                  },
+                  error: function () {
+                      alert('ERROR check win');
+
+                  },
+              });
+
+          }
+
+          $(document).ready(function () {
+
+
+              function createGrid() {
+                  $('#GameGrid').empty();
+
+                  for (let i = 0; i < gridX; i++) {
+                      for (let j = 0; j < gridY; j++) {
+                          const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
+                          $('#GameGrid').append(newCell);
+
+                          let cellValue = getCellValueFromDatabase(i, j);
+
+                          if (cellValue === -1 || cellValue === '') {
+                              newCell.text('');
+                          } else {
+                              let value = cellValue === '0' ? 'X' : 'O';
+                              newCell.text(value);
+                              gameBoard[i][j]=value;
+                          }
+                      }
+                  }
+              }
+
+              $('#GameGrid').on('click', '.GridCell', function () {
+                  const row = parseInt($(this).attr('data-row'));
+                  const col = parseInt($(this).attr('data-col'));
+
+                  console.log(whosturn + " test");
+                  if ( whosturn === playerusername) {
+                      if (gameBoard[row][col] === '') {
+                      gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
+                      updateGrid();
+                      updateCellInDatabase(row, col, currentPlayer);
+
+                      prevGameBoard = gameBoard.map(row => row.slice());
+
+                      if (checkWin()) {
+                          alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
+                          setwinner();
+                      } else if (checkDraw()) {
+                          alert('It\'s a draw!');
+                      } else {
+                          nextplayerturn=switchPlayer();
+                      }
+                  } else {
+                      alert('Cell already taken! Choose another.');
+                  }
+                  }
+                  else{
+                      alert("this cell is not your's to take")
+                  }
+
+
+              });
+
+              function refreshGrid() {
+                  createGrid();
+                  updateGrid();
+                  checkturn();
+                  checkwinner()
+              }
+
+              setInterval(refreshGrid, 10);
+          });
+
+          function getCellValueFromDatabase(row, col) {
+              const csrfToken = '{{ csrf_token }}';
+              let cellValue = -1;
+              const getCellValueFromDatabaseUrl = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
+              const cellurl = `${getCellValueFromDatabaseUrl}?game_idcode=${gameId}`;
+
+              $.ajax({
+                  url: cellurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+                      row: row,
+                      col: col,
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.cellValue !== undefined) {
+                          cellValue = response.cellValue;
+                      } else {
+                          alert('Error fetching cell value from the database. Please try again.');
+                      }
+                  },
+                  error: function () {
+                      alert('Error fetching cell value from the database. Please try again.');
+                  },
+              });
+
+              return cellValue;
+          }
+    </script>
   </body>
 </html>

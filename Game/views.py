@@ -322,3 +322,21 @@ def checkturn(request, game_idcode):
     return JsonResponse({'nextplayer': nextplayer})
 
 
+def setwinner(request, game_idcode):
+    game = get_object_or_404(Game, id_code=game_idcode)
+    game.winner = game.nextplayer
+    game.isfinished=True
+    game.save()
+    playerwinner = game.winner
+    message = f'{playerwinner} Has Won the GAME !'
+    return JsonResponse({'message': message})
+
+def checkwinner(request, game_idcode):
+    game = get_object_or_404(Game, id_code=game_idcode)
+
+    if game.winner == None:
+        winner="none"
+    else:
+        winner = game.winner.username
+    print (winner , " test")
+    return JsonResponse({'winner': winner})

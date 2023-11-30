@@ -50,4 +50,6 @@ urlpatterns = [
     path('gamescene/move/get_cell_value_from_database/<str:game_idcode>/',getCellValueFromDatabase, name='get_cell_value_from_database'),
 path('gamescene/move/getplayerturn/<str:game_idcode>/',getnextplayerturn, name='getnextplayerturn'),
 path('gamescene/move/checkturn/<str:game_idcode>/',checkturn, name='checkturn'),
+path('gamescene/move/checkwinner/<str:game_idcode>/',checkwinner, name='checkwinner'),
+path('gamescene/move/setwinner/<str:game_idcode>/',setwinner, name='setwinner'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
