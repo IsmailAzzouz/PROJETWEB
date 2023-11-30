@@ -1,17 +1,13 @@
 TODO:
     make the js of game working for multyplayer so :
-        switching between players,
-        if actual grid = last grid other player didn't play it's our turn
         checkwin if win/draw:
             win:
-                put winner username in the db and actualing he's score
+                put winner username in the db and actualing he's score MADE
             draw:
-                put the isfinised bool to true in the db
+                put the isfinised bool to true in the db WP
     Add user symbols from there profile each user sees he's chooser symbols individually so if player one chose x neon player two on player one pov will have o neon
     Put the js in a js file
     Make a CSS for the game
     Make the scoreBoard
     adapt
     A game need a title
-    Game code needs to be displayed in the wainting page
-    reucper la version de chatgpt qui verifie si grid 1 et 2 sont les meme ensuite crreer une variable me= si player one 0 sinon 1 si current player =! de me i can't click but if grid 1 and 2 diff i can play

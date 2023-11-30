@@ -1,10 +1,7 @@
-<!-- game_grid.html -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tic-Tac-Toe Game</title>
+{% extends "BASE.html" %}
+{% load static %}
+
+{% block css %}
     <style>
       /* Your styles here */
       body {
@@ -16,13 +13,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh; /* Set the height of the container, adjust as needed */
-        margin: 0;
+        height: fit-content; /* Set the height of the container, adjust as needed */
+        margin: 50px;
       }
 
       #GameGrid {
         display: grid;
-        width: 85%;
+        width: fit-content;
         height: 75%;
 
         grid-template-columns: repeat({{game_y}}, minmax(0, 1fr));
@@ -38,11 +35,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #000;
+        border: 2.5px solid #2054fd;
         padding: 10px;
         text-align: center;
         font-size: 24px;
         cursor: pointer;
+        border-radius: 50px;
+        width: 100px;
+        height: 100px;
+
+        filter: drop-shadow(0px 0px 2.5px #c54af1);
+        backdrop-filter: blur(05px);
       }
 
       h1 {
@@ -54,16 +57,17 @@
         margin-top: 20px;
         text-align: center;
       }
-    </style>
-  </head>
-  <body>
-    <h1>Tic-Tac-Toe Game</h1>
-    <h1>{{ player_1 }}</h1>
-    <h1>{{ player_2 }}</h1>
-    <h1>{{ user.username }}</h1>
-    <div id="GameGrid"></div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      .Versus{
+           display: flex;
+    justify-content: space-around;
+    align-items: center;
+      }
+    </style>
+{% endblock %}
+
+{% block JS %}
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
             let gridX = {{ game_x }};
@@ -75,7 +79,7 @@
           const playerusername = '{{user.username}}';
           let nextplayerturn='{{player_1}}';
           let whosturn= '{{player_1}}';
-          alert("test");
+          //alert("test");
           /*function areGridsEqual(grid1, grid2) {
               for (let i = 0; i < gridX; i++) {
                   for (let j = 0; j < gridY; j++) {
@@ -283,7 +287,7 @@
       let winner = response.winner;
                   console.log(response.winner);
                   if(winner != "none"){
-                      alert(winner + "won the game");
+                      //alert(winner + "won the game");
                   }
 
 
@@ -397,5 +401,43 @@
               return cellValue;
           }
     </script>
-  </body>
-</html>
+
+{% endblock %}
+
+{% block content %}
+<div class="GameInfo">
+<h1>Tic-Tac-Toe Game</h1>
+
+<div class="Versus">
+<h2>
+{{ player_1 }}
+</h2>
+<h2>
+VS
+</h2>
+<h2>
+{{ player_2 }}
+</h2>
+</div>
+<div></div>
+
+</div>
+
+
+
+    <div class="GameScene">
+     <div id="GameGrid">
+</div>
+</div>
+{% endblock %}
+
+{% block script_variable %}
+
+{% endblock %}
+
+
+
+
+
+
+
