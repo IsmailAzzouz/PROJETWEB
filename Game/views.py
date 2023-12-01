@@ -340,3 +340,27 @@ def checkwinner(request, game_idcode):
         winner = game.winner.username
     print (winner , " test")
     return JsonResponse({'winner': winner})
+def setdraw(request, game_idcode):
+    game = get_object_or_404(Game, id_code=game_idcode)
+    game.isfinished=True
+    game.save()
+    return JsonResponse({'message':'game saved succefully'})
+
+
+def surrender(request, game_idcode):
+    try:
+        playername = request.POST.get('playername', '')
+        game = get_object_or_404(Game, id_code=game_idcode)
+
+        if game.player_1.username == playername:
+            game.winner = game.player_2
+        else:
+            game.winner = game.player_1
+
+        game.isfinished = True
+        game.save()
+        print(playername)
+        return JsonResponse({'message': 'game saved successfully'})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)})

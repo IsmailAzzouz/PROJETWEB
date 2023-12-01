@@ -65,7 +65,7 @@
       }
     </style>
 {% endblock %}
-
+{% block title %}PLAYING{% endblock %}
 {% block JS %}
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -268,6 +268,38 @@
               });
 
           }
+          function setdraw(){
+              const csrfToken = '{{ csrf_token }}';
+              const setdraw = '{% url "setdraw" game_idcode=game_idcode %}'; //nom de la bonne view
+              const setdrawurl = `${setdraw}?game_idcode=${gameId}`; //url a modifier
+
+              $.ajax({
+                  url: setdrawurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.message !== undefined) {
+                  console.log(response.message);
+
+
+
+                      } else {
+                          alert(error + ' test error')
+                          return "error";
+                      }
+                  },
+                  error: function () {
+                      alert('ERROR check turn');
+                      //whosturn = "error";
+                  },
+              });
+
+          }
           function checkwinner(){
               const csrfToken = '{{ csrf_token }}';
               const checkwinner = '{% url "checkwinner" game_idcode=game_idcode %}'; //nom de la bonne view
@@ -346,6 +378,7 @@
                           setwinner();
                       } else if (checkDraw()) {
                           alert('It\'s a draw!');
+                          setdraw();
                       } else {
                           nextplayerturn=switchPlayer();
                       }
@@ -367,7 +400,7 @@
                   checkwinner()
               }
 
-              setInterval(refreshGrid, 10);
+              setInterval(refreshGrid, 500);
           });
 
           function getCellValueFromDatabase(row, col) {
@@ -400,6 +433,40 @@
 
               return cellValue;
           }
+function surrender(){
+              const csrfToken = '{{ csrf_token }}';
+              const surrender = '{% url "surrender" game_idcode=game_idcode %}'; //nom de la bonne view
+              const surrenderurl = `${surrender}?game_idcode=${gameId}`; //url a modifier
+              const username = '{{ user.username}}' ;
+            console.log(username);
+              $.ajax({
+                  url: surrenderurl,
+                  method: 'POST',
+                  data: {
+                      game_code: gameId,
+                        playername:username,
+                      csrfmiddlewaretoken: csrfToken,
+                  },
+                  async: false,
+                  success: function (response) {
+                      if (response.message !== undefined) {
+                  console.log(response.message);
+
+
+
+                      } else {
+                          alert(error + ' test error')
+                          return "error";
+                      }
+                  },
+                  error: function () {
+                      alert('ERROR check turn');
+                      //whosturn = "error";
+                  },
+              });
+
+          }
+
     </script>
 
 {% endblock %}
@@ -429,6 +496,8 @@ VS
      <div id="GameGrid">
 </div>
 </div>
+
+<button class="surrender" onclick="surrender()">SURRENDER</button>
 {% endblock %}
 
 {% block script_variable %}

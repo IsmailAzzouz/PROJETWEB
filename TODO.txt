@@ -1,13 +1,31 @@
-TODO:
-    make the js of game working for multyplayer so :
-        checkwin if win/draw:
-            win:
-                put winner username in the db and actualing he's score MADE
-            draw:
-                put the isfinised bool to true in the db WP
+   TODO:
     Add user symbols from there profile each user sees he's chooser symbols individually so if player one chose x neon player two on player one pov will have o neon
     Put the js in a js file
-    Make a CSS for the game
+    Make a CSS for the game <<
     Make the scoreBoard
     adapt
     A game need a title
+
+
+GAME:
+    -CAN CREATE GAME <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN JOIN GAME <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN PLAY GAME <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN WIN GAME <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN GAME DRAW <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN SURRENDER GAME <<<<<<<<<<<<<<<<<<<<FINISHED
+    -CAN'T PLAY IF OTHER PLAYER TURN HASN'T BEEN TAKEN <<<<<<<<<<<<<<<<<<<<FINISHED
+WHAT TO ADD TO GAME :
+    -A POPUP TO SAY WHENEVER A PLAYER HAS SURRENDER
+    -A POPUP FOR WHEN A PLAYER WIN/LOSES
+    -A REDIRECT BUTTON IN THE POP UP TO GET REDIRECTED ON THE MAIN PAGE
+    -AN OVERLAY IN GAME TO SEE WHO'S FIGHTING WHO
+    -THE USE OF THE USER SYMBOL
+    -THE PLACEMENT OF IMG IN THE CELLS
+    -THE ANIMATION IN CASE OF WIN OR LOOSE
+    -WRITING THE GAME CODE IN THE GAME PAGE SO IF A PLAYER GETS DISCONNECTED HE CAN STILL JOIN
+    -YOU CAN'T JOIN THE GAME IN PLAYER 2 IF YOU'RE PLAYER 1
+    -EVEN IF THE GAME HAS A PLAYER 1 & 2 YOU CAN STILL ENTER IF THE GAME IS NOT FINISHED
+    -ADD A CALC FOR THE SCORE AND THE RANK OF THE PLAYER
+    -ADDING A GAME TITLE
+    -ADDING A GAME DATE SO WE KNOW WHEN THE PLAYER CREATED THE GAME
