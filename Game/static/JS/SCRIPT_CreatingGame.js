@@ -26,7 +26,7 @@ $(document).ready(function () {
 
                     // Vérifie s'il y a des erreurs liées à "grid_y"
                     if (data.errors.grid_y) {
-                        errorMessage += 'Grid Y : ' + jqXHR.responseJSON.errors.grid_y + '\n' + ' \n';
+                        errorMessage += 'Grid Y : ' + data.errors.grid_y + '\n' + ' \n';
                     }
 
                     // Vérifie s'il y a des erreurs liées à "alignment"
