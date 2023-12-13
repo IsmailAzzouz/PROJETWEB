@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-%%l0fsr164!-=%rc7$9wi(p4j@wl#1es&ygb3)a-s(oe5et)3s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'votre_domaine.com']
 
 # Application definition
 
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'PROJETWEB.urls'
@@ -72,7 +73,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'PROJETWEB.wsgi.application'
+#WSGI_APPLICATION = 'PROJETWEB.wsgi.application'
+#ASGI_APPLICATION = "PROJETWEB.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -116,8 +118,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
+STATIC_URL = os.path.join(BASE_DIR, '/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -128,3 +130,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            # "hosts": [("127.0.0.1", 6379)],  # Assurez-vous que cela correspond à votre configuration Redis
+            "hosts": ["redis://127.0.0.1:6380/0"],  # Utilisez cette ligne si vous avez Redis version 3.0 ou supérieure
+        },
+    },
+}

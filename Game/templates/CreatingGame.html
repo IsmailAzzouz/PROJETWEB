@@ -1,50 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{% extends "BASE.html" %}
+{% load static %}
 
-<!-- Your form HTML -->
-<form id="game-form" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="button" id="create-game-btn">Create Game</button>
-</form>
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_CreatingGame.css' %}">
+{% endblock %}
 
-<!-- jQuery script for asynchronous form submission -->
-<script>
-    
-    $(document).ready(function () {
-        $("#create-game-btn").click(function () {
-            var form = $("#game-form");
-            $.ajax({
-                type: form.attr("method"),
-                url: form.attr("action"),
-                data: form.serialize(),
-                dataType: 'json',
-                success: function (data) {
-                    if (data.success) {
-                        // Redirect to the game page upon successful join
-                        window.location.href = '{% url "waiting-page" %}';  // Replace with the actual URL for waiting
-                    } else {
-                        // Handle errors (e.g., display error messages)
-                        console.log('Error joining the game:', data.message);
-                    }
-                },
-                error: function (data) {
-                    // Handle error response
-                    alert("erreur");
-                    console.log(data);
+{% block JS %}
+    <script src="{% static 'JS/SCRIPT_CreatingGame.js' %}"></script>
+{% endblock %}
 
-                }
-            });
-        });
-    });
-</script>
+{% block content %}
+    <!-- Your form HTML -->
+    <div class="FormCreateGame">
+        <div class="container">
+            <form id="game-form" method="post" enctype="multipart/form-data" class="leform">
+                {% csrf_token %}
+                {{ form.as_p}}
+                <button type="button" id="create-game-btn">Create Game</button>
+            </form>
+        </div>
+    </div>
 
-</body>
-</html>
+
+{% endblock %}
+
+{% block script_variable %}
+    <script>
+        const url='{% url "waiting-page" %}';
+    </script>
+{% endblock %}

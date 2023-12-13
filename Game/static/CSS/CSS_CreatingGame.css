@@ -1,0 +1,137 @@
+.leform {
+  max-width: 400px;
+  margin: 0 auto;
+  transition: 0.2s;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.container {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leform label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.leform button {
+  background-color: rgb(160, 93, 185);
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: Inter;
+  transition: 0.5s;
+}
+
+.leform button:hover {
+  background-color: rgb(213, 122, 245);
+  padding: 10px 13px 10px 13px;
+  transition: 0.5s;
+}
+
+.leform {
+  width: max-content;
+  height: max-content;
+}
+
+.FormCreateGame {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 500px;
+  height: 500px;
+  position: sticky;
+  margin-top: 155px;
+  left: calc(50% - 250px);
+  transform: scale(1.5);
+  left: calc(50% - 250px);
+}
+
+.FormCreateGame p input {
+  border-radius: 10px;
+  filter: drop-shadow(2.5px 2.5px 0px #a11bce);
+  border-style: none;
+  padding: 4px;
+}
+
+.leform input {
+  transition: 0.2s;
+  padding: 2.5px;
+  font-family: Inter;
+  background-color: rgb(24, 25, 27);
+  box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+  color: white;
+}
+
+.leform input[type="number"]::-webkit-inner-spin-button,
+.leform input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.leform input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.leform input:focus-visible {
+  transition: 0.2s;
+  padding: 8px;
+  filter: drop-shadow(2.5px 2.5px 0px #375cd5);
+  border: 1px solid #375cd5;
+  background-color: rgb(24, 25, 27);
+  caret-color: #375cd5;
+  outline: solid 1px transparent;
+  backdrop-filter: blur(30px);
+  color: white;
+  font-family: Inter;
+}
+
+input::placeholder {
+  transition: 0.2s;
+  padding: 2.5px;
+  font-family: Inter;
+  background-color: rgb(24, 25, 27);
+  box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+  color: white;
+}
+/**************CSS FOR CUSTOMS ALERT***********************/
+/*
+.custom-alert {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-family: Arial, sans-serif;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}
+*/

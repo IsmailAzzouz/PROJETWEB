@@ -6,24 +6,34 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="icon" type="image/x-icon" href="/media/icone.png">
     <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
     />
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/global.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     {% block css %}
 
 {% endblock %}
 
 
     <title>HELBMOPRION | {% block title %}{% endblock %}</title>
+{% block JS %}
+{% endblock %}
 </head>
 <body>
 
 <div class="nav-barre" style="color: white">
 
     <a class="helbmorpion" href="{% url 'morpion-home' %}">HELBMORPION</a>
-    <div class="midlinks"><a class="play" href="{% url 'morpion-home' %}">Play</a>
+    <div class="midlinks">
+        {% if user.is_authenticated %}
+        <a class="play" href="{% url 'Play' %}">Play</a>
+        {% else %}
+        <a class="play" href="{% url 'login' %}">Play</a>
+        {% endif %}
         <a class="score-board" href="{% url 'morpion-home' %}">Score-Board</a>
         <a class="about" href="{% url 'morpion-home' %}">About</a>
         <a class="contact" href="{% url 'morpion-home' %}">Contact</a>
@@ -61,4 +71,11 @@
     </div>
   </div>-->
 </body>
+
+
+   {% block script_variable %}
+
+{% endblock %}
+
+
 </html>

@@ -1,0 +1,168 @@
+
+p, a {
+    color: white;
+}
+
+.Main-Content{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    position: sticky;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+   /* top: 50%;*/
+    height: 91.5vh;
+    overflow: hidden;
+
+}
+.xs-and-os {
+    margin: 0;
+}
+
+.catchphrase,
+.xs-and-os-container {
+    /*position: absolute;*/
+    /*left: calc(50% - 415px);*/
+    width: 51.88rem;
+    height: 14rem;
+}
+
+.xs-and-os-container {
+    margin: 0;
+    /*top: calc(50% - 112px);*/
+    font-size: inherit;
+    font-weight: 700;
+    font-family: inherit;
+    /*display: inline-block;*/
+}
+
+.catchphrase {
+    /*top: calc(50% - 165px);*/
+
+    text-align: center;
+    font-size: 5.31rem;
+    /*position: absolute;*/
+    position: inherit;
+}
+
+
+
+
+
+
+.homepage {
+    position: relative;
+    background-color: var(--color-white);
+    width: 100%;
+    height: 56.25rem;
+    overflow: hidden;
+    text-align: left;
+    font-size: var(--font-size-mini);
+    color: var(--color-white);
+    font-family: var(--font-inter);
+}
+
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    font-family: Inter;
+    /*position: absolute;*/
+    /*top: 40rem;*/
+   /* left: calc(50% - 212px);*/
+}
+
+.wrapper span {
+
+    font-family: Inter;
+}
+
+
+.cta {
+    display: flex;
+    padding: 10px 45px;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    color: white;
+    background: #b77fe3;
+    transition: 1s;
+    box-shadow: 6px 6px 5px black;
+    transform: skewX(-15deg);
+}
+
+.cta:focus {
+    outline: none;
+}
+
+.cta:hover {
+    transition: 0.5s;
+    box-shadow: 10px 10px 5px rgba(162, 70, 201, 0.53);
+
+
+}
+
+.cta span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 0px;
+}
+
+.cta:hover span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 45px;
+}
+
+span {
+    transform: skewX(15deg)
+}
+
+span:nth-child(2) {
+    width: 20px;
+    margin-left: 30px;
+    position: relative;
+    top: 12%;
+}
+
+/**************SVG****************/
+
+path.one {
+    transition: 0.4s;
+    transform: translateX(-60%);
+}
+
+path.two {
+    transition: 0.5s;
+    transform: translateX(-30%);
+}
+
+.cta:hover path.three {
+    animation: color_anim 1s infinite 0.2s;
+}
+
+.cta:hover path.one {
+    transform: translateX(0%);
+    animation: color_anim 1s infinite 0.6s;
+}
+
+.cta:hover path.two {
+    transform: translateX(0%);
+    animation: color_anim 0.8s infinite 0.5s;
+}
+
+/* SVG animations */
+
+@keyframes color_anim {
+    0% {
+        fill: white;
+    }
+    50% {
+        fill: rgba(162, 70, 201, 0.53);
+    }
+    100% {
+        fill: white;
+    }
+}
+
+/****************************************************/
+

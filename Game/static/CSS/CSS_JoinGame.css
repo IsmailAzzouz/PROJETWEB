@@ -1,0 +1,80 @@
+.CONTAINER{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    height: 350px;
+    top: calc(50% - 104px);
+    width: 100vw;
+    text-align: center;
+
+}
+.title{
+    font-family: Inter;
+    font-size: xxx-large;
+    position: absolute;
+    top: calc(50% - 150px);
+    left:calc(50% - 145px);
+}
+/******/
+.leform{
+    transition: 0.2s;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    transform: scale(1.5);
+}
+.FormJoinGame{
+    text-align: center;
+
+}
+.FormJoinGame input{
+    padding: 7px;
+}
+.leform button {
+  background-color: rgb(160, 93, 185);
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+    font-family: Inter;
+    transition: 0.5s;
+}
+
+.leform button:hover {
+  background-color: rgb(213, 122, 245);
+    padding: 10px 13px 10px 13px;
+    transition: 0.5s;
+}
+
+.FormJoinGame input {
+  border-radius: 10px;
+  filter: drop-shadow(2.5px 2.5px 0px #a11bce);
+  border-style: none;
+  padding: 4px;
+}
+.leform input {
+  transition: 0.2s;
+    padding: 2.5px;
+  font-family: Inter;
+   background-color: rgb(24, 25, 27);
+  box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+    color: white;
+}
+.leform input:focus-visible {
+  transition: 0.2s;
+  padding: 8px;
+  filter: drop-shadow(2.5px 2.5px 0px #375cd5);
+  border: 1px solid #375cd5;
+  background-color: rgb(24, 25, 27);
+  caret-color: #375cd5;
+  outline: solid 1px transparent;
+  backdrop-filter: blur(30px);
+  color: white;
+  font-family: Inter;
+}
