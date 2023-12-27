@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET, require_POST
 from PROJETWEB import urls
 
 from .models import Game, Cell, Grid
+from .models import Cell
 
 from django.http import JsonResponse
 
@@ -279,7 +280,7 @@ def update_cell_in_database(request, game_idcode):
 
         # Update the corresponding cell in the database
         cell.value = symbol
-        print("symbol :" , symbol + "\n row : " , row , "\n col : " ,  col)
+        print("symbol :", symbol + "\n row : ", row, "\n col : ", col)
         cell.save()
 
         return HttpResponse(status=200)
@@ -299,6 +300,7 @@ def getCellValueFromDatabase(request, game_idcode):
     cell = get_object_or_404(Cell, grid=grid, x_position=row, y_position=col)
 
     return JsonResponse({'cellValue': cell.value})
+
 
 def getnextplayerturn(request, game_idcode):
     game = get_object_or_404(Game, id_code=game_idcode)
@@ -323,28 +325,42 @@ def checkturn(request, game_idcode):
 
 
 def setwinner(request, game_idcode):
+
     game = get_object_or_404(Game, id_code=game_idcode)
     game.winner = game.nextplayer
-    game.isfinished=True
+    game.isfinished = True
+    if game.nextplayer is game.player_1:
+        cells = Cell.objects.filter(grid=game.grid, value="0").count()
+
+    else:
+        cells = Cell.objects.filter(grid=game.grid, value="1").count()
+    winner = game.nextplayer
+    winner.profile.user_score = winner.profile.user_score + ((100/cells)*10)
+    winner.save()
     game.save()
+    game.player_1.save()
+    game.player_2.save()
     playerwinner = game.winner
-    message = f'{playerwinner} Has Won the GAME !'
+    message = f'{playerwinner.username} Has Won the GAME !'
     return JsonResponse({'message': message})
+
 
 def checkwinner(request, game_idcode):
     game = get_object_or_404(Game, id_code=game_idcode)
 
     if game.winner == None:
-        winner="none"
+        winner = "none"
     else:
         winner = game.winner.username
-    print (winner , " test")
+
     return JsonResponse({'winner': winner})
+
+
 def setdraw(request, game_idcode):
     game = get_object_or_404(Game, id_code=game_idcode)
-    game.isfinished=True
+    game.isfinished = True
     game.save()
-    return JsonResponse({'message':'game saved succefully'})
+    return JsonResponse({'message': 'game saved succefully'})
 
 
 def surrender(request, game_idcode):
@@ -358,6 +374,7 @@ def surrender(request, game_idcode):
             game.winner = game.player_1
 
         game.isfinished = True
+        game.has_surrendered = True
         game.save()
         print(playername)
         return JsonResponse({'message': 'game saved successfully'})

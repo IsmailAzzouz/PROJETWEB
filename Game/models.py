@@ -13,6 +13,7 @@ class Game(models.Model):
     id_code = models.CharField(max_length=11, default=generate_random_code, unique=True)
     private = models.BooleanField(default=False)
     isfinished = models.BooleanField(default=False)
+    has_surrendered = models.BooleanField(default=False)
     grid_x = models.IntegerField()
     grid_y = models.IntegerField()
     alignment = models.IntegerField()

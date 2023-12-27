@@ -1,512 +1,581 @@
-{% extends "BASE.html" %}
-{% load static %}
+{% extends "BASE.html" %} {% load static %} {% block css %}
+<style>
+  /* Your styles here */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  /* Updated CSS for the modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 
-{% block css %}
-    <style>
-      /* Your styles here */
-      body {
-        margin: 0;
-        padding: 0;
-      }
+  .modal-content {
+    background-color: #6a5acd; /* Purple background color */
+    margin: auto;
+    margin-top: 15%; /* Adjust the margin-top to vertically center the modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; /* Adjust the width as needed */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center;
+    color: #fff; /* White text color */
+    position: relative; /* Added for centering */
+  }
 
-      .GameScene {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: fit-content; /* Set the height of the container, adjust as needed */
-        margin: 50px;
-      }
+  .close {
+    color: #fff; /* White text color */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
 
-      #GameGrid {
-        display: grid;
-        width: fit-content;
-        height: 75%;
+  .button {
+    background-color: #fff; /* White button background color */
+    color: #6a5acd; /* Purple button text color */
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-        grid-template-columns: repeat({{game_y}}, minmax(0, 1fr));
-        grid-template-rows: repeat({{game_x}}, minmax(0, 1fr));
-        gap: 5px;
-        /**/ /*****/
-      }
+  .GameScene {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content; /* Set the height of the container, adjust as needed */
+    margin: 50px;
+  }
 
-      .GridCell {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2.5px solid #2054fd;
-        padding: 10px;
-        text-align: center;
-        font-size: 24px;
-        cursor: pointer;
-        border-radius: 50px;
-        width: 100px;
-        height: 100px;
+  #GameGrid {
+    display: grid;
+    width: fit-content;
+    height: 75%;
 
-        filter: drop-shadow(0px 0px 2.5px #c54af1);
-        backdrop-filter: blur(05px);
-      }
+    grid-template-columns: repeat({{game_y}}, minmax(0, 1fr));
+    grid-template-rows: repeat({{game_x}}, minmax(0, 1fr));
+    gap: 5px;
+    /**/ /*****/
+  }
 
-      h1 {
-        margin-top: 20px;
-        text-align: center;
-      }
+  .GridCell {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2.5px solid #2054fd;
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
 
-      fieldset {
-        margin-top: 20px;
-        text-align: center;
-      }
+    filter: drop-shadow(0px 0px 2.5px #c54af1);
+    backdrop-filter: blur(05px);
+  }
 
-      .Versus{
-           display: flex;
+  h1 {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  fieldset {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .Versus {
+    display: flex;
     justify-content: space-around;
     align-items: center;
-      }
-    </style>
-{% endblock %}
-{% block title %}PLAYING{% endblock %}
-{% block JS %}
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+  }
+.surrender-container {
+  display: flex;
+  justify-content: center;
+}
 
-            let gridX = {{ game_x }};
-          let gridY = {{ game_y }};
-          let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-          //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-          let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
-          const gameId = '{{ game_idcode }}';
-          const playerusername = '{{user.username}}';
-          let nextplayerturn='{{player_1}}';
-          let whosturn= '{{player_1}}';
-          //alert("test");
-          /*function areGridsEqual(grid1, grid2) {
-              for (let i = 0; i < gridX; i++) {
-                  for (let j = 0; j < gridY; j++) {
-                      if (grid1[i][j] !== grid2[i][j]) {
-                          return false;
-                      }
-                  }
-              }
-              return true;
-          }
-      */
-          function updateCellInDatabase(row, col, symbol) {
-              const csrfToken = '{{ csrf_token }}';
-              const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
-              const url = `${updateCellUrl}?game_idcode=${gameId}`;
+.surrender {
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-              $.ajax({
-                  url: url,
-                  method: 'POST',
-                  data: {
-                      row: row,
-                      col: col,
-                      symbol: symbol,
-                      csrfmiddlewaretoken: csrfToken,
-                      game_idcode: gameId,
-                  },
-                  success: function (response) {
-                      // Handle the server response as needed
-                  },
-                  error: function () {
-                      alert('Error updating the cell in the database. Please try again.');
-                  },
-              });
-          }
+.surrender:hover {
+  background-color: #c0392b;
+}
 
-          function updateGrid() {
-              for (let i = 0; i < gridX; i++) {
-                  for (let j = 0; j < gridY; j++) {
-                      const cellValue = getCellValueFromDatabase(i, j);
-                      const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
+.surrender:active {
+  background-color: #922b21;
+}
 
-                      if (cellValue === -1 || cellValue === '') {
-                          cellElement.text('');
-                      } else {
-                          let value= cellValue === '0' ? 'X' : 'O';
-                          cellElement.text(value);
-                          gameBoard[i][j]=value;
-                      }
-                  }
-              }
-          }
+</style>
+{% endblock %} {% block title %}PLAYING{% endblock %} {% block JS %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
 
-          function checkWin() {
-              for (let i = 0; i < gridX; i++) {
-                  if (
-                      gameBoard[i][0] !== '' &&
-                      gameBoard[i].every((cell) => cell === gameBoard[i][0])
-                  ) {
-                      return true;
-                  }
-              }
+              let gridX = {{ game_x }};
+            let gridY = {{ game_y }};
+            let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+            //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+            let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
+            const gameId = '{{ game_idcode }}';
+            const playerusername = '{{user.username}}';
+            let nextplayerturn='{{player_1}}';
+            let whosturn= '{{player_1}}';
+            //alert("test");
+            /*function areGridsEqual(grid1, grid2) {
+                for (let i = 0; i < gridX; i++) {
+                    for (let j = 0; j < gridY; j++) {
+                        if (grid1[i][j] !== grid2[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        */
+            function updateCellInDatabase(row, col, symbol) {
+                const csrfToken = '{{ csrf_token }}';
+                const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
+                const url = `${updateCellUrl}?game_idcode=${gameId}`;
 
-              for (let i = 0; i < gridY; i++) {
-                  if (
-                      gameBoard[0][i] !== '' &&
-                      gameBoard.every((row) => row[i] === gameBoard[0][i])
-                  ) {
-                      return true;
-                  }
-              }
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        row: row,
+                        col: col,
+                        symbol: symbol,
+                        csrfmiddlewaretoken: csrfToken,
+                        game_idcode: gameId,
+                    },
+                    success: function (response) {
+                        // Handle the server response as needed
+                    },
+                    error: function () {
+                        alert('Error updating the cell in the database. Please try again.');
+                    },
+                });
+            }
 
-              if (
-                  gameBoard[0][0] !== '' &&
-                  gameBoard.every((row, index) => row[index] === gameBoard[0][0])
-              ) {
-                  return true;
-              }
+            function updateGrid() {
+                for (let i = 0; i < gridX; i++) {
+                    for (let j = 0; j < gridY; j++) {
+                        const cellValue = getCellValueFromDatabase(i, j);
+                        const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
 
-              if (
-                  gameBoard[0][gridY - 1] !== '' &&
-                  gameBoard.every(
-                      (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
-                  )
-              ) {
-                  return true;
-              }
+                        if (cellValue === -1 || cellValue === '') {
+                            cellElement.text('');
+                        } else {
+                            let value= cellValue === '0' ? 'X' : 'O';
+                            cellElement.text(value);
+                            gameBoard[i][j]=value;
+                        }
+                    }
+                }
+            }
 
-              return false;
-          }
+            function checkWin() {
+                for (let i = 0; i < gridX; i++) {
+                    if (
+                        gameBoard[i][0] !== '' &&
+                        gameBoard[i].every((cell) => cell === gameBoard[i][0])
+                    ) {
+                        return true;
+                    }
+                }
 
-          function checkDraw() {
-              return gameBoard.every((row) => row.every((cell) => cell !== ''));
-          }
+                for (let i = 0; i < gridY; i++) {
+                    if (
+                        gameBoard[0][i] !== '' &&
+                        gameBoard.every((row) => row[i] === gameBoard[0][i])
+                    ) {
+                        return true;
+                    }
+                }
 
-          function switchPlayer() {
-              const csrfToken = '{{ csrf_token }}';
-              const getnextplayerturn = '{% url "getnextplayerturn" game_idcode=game_idcode %}'; //nom de la bonne view
-              const getnextplayerturnlurl = `${getnextplayerturn}?game_idcode=${gameId}`; //url a modifier
+                if (
+                    gameBoard[0][0] !== '' &&
+                    gameBoard.every((row, index) => row[index] === gameBoard[0][0])
+                ) {
+                    return true;
+                }
 
-              $.ajax({
-                  url: getnextplayerturnlurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-                      playerusername : playerusername,
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.nextplayer !== undefined) {
-                          console.log(response.nextplayer);
+                if (
+                    gameBoard[0][gridY - 1] !== '' &&
+                    gameBoard.every(
+                        (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
+                    )
+                ) {
+                    return true;
+                }
 
-                      } else {
-                          alert('Error fetching next player from db.');
-                      }
-                  },
-                  error: function () {
-                      //alert('ERROR '+ " switch player");
-                  },
-              });
+                return false;
+            }
 
+            function checkDraw() {
+                return gameBoard.every((row) => row.every((cell) => cell !== ''));
+            }
 
-          }
+            function switchPlayer() {
+                const csrfToken = '{{ csrf_token }}';
+                const getnextplayerturn = '{% url "getnextplayerturn" game_idcode=game_idcode %}'; //nom de la bonne view
+                const getnextplayerturnlurl = `${getnextplayerturn}?game_idcode=${gameId}`; //url a modifier
 
-          function checkturn(){
-              const csrfToken = '{{ csrf_token }}';
-              const checkturn = '{% url "checkturn" game_idcode=game_idcode %}'; //nom de la bonne view
-              const checkturnurl = `${checkturn}?game_idcode=${gameId}`; //url a modifier
+                $.ajax({
+                    url: getnextplayerturnlurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
+                        playerusername : playerusername,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.nextplayer !== undefined) {
+                            console.log(response.nextplayer);
 
-              $.ajax({
-                  url: checkturnurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.nextplayer !== undefined) {
-                  console.log(response.nextplayer);
-                  let turned = response.nextplayer;
-                      console.log(turned + " it s");
-                              whosturn = response.nextplayer;
-
-                      } else {
-                          alert(error + ' test error')
-                          return "error";
-                      }
-                  },
-                  error: function () {
-                      alert('ERROR check turn');
-                      whosturn = "error";
-                  },
-              });
-
-          }
-          function setwinner(){
-              const csrfToken = '{{ csrf_token }}';
-              const setwinner = '{% url "setwinner" game_idcode=game_idcode %}'; //nom de la bonne view
-              const setwinnerurl = `${setwinner}?game_idcode=${gameId}`; //url a modifier
-
-              $.ajax({
-                  url: setwinnerurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.message !== undefined) {
-                  console.log(response.message);
+                        } else {
+                            alert('Error fetching next player from db.');
+                        }
+                    },
+                    error: function () {
+                        //alert('ERROR '+ " switch player");
+                    },
+                });
 
 
+            }
 
-                      } else {
-                          alert(error + ' test error')
-                          return "error";
-                      }
-                  },
-                  error: function () {
-                      alert('ERROR check turn');
-                      //whosturn = "error";
-                  },
-              });
+            function checkturn(){
+                const csrfToken = '{{ csrf_token }}';
+                const checkturn = '{% url "checkturn" game_idcode=game_idcode %}'; //nom de la bonne view
+                const checkturnurl = `${checkturn}?game_idcode=${gameId}`; //url a modifier
 
-          }
-          function setdraw(){
-              const csrfToken = '{{ csrf_token }}';
-              const setdraw = '{% url "setdraw" game_idcode=game_idcode %}'; //nom de la bonne view
-              const setdrawurl = `${setdraw}?game_idcode=${gameId}`; //url a modifier
+                $.ajax({
+                    url: checkturnurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.nextplayer !== undefined) {
+                    console.log(response.nextplayer);
+                    let turned = response.nextplayer;
+                        console.log(turned + " it s");
+                                whosturn = response.nextplayer;
 
-              $.ajax({
-                  url: setdrawurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
+                        } else {
+                            alert(error + ' test error')
+                            return "error";
+                        }
+                    },
+                    error: function () {
+                        alert('ERROR check turn');
+                        whosturn = "error";
+                    },
+                });
 
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.message !== undefined) {
-                  console.log(response.message);
+            }
+            function setwinner(){
+                const csrfToken = '{{ csrf_token }}';
+                const setwinner = '{% url "setwinner" game_idcode=game_idcode %}'; //nom de la bonne view
+                const setwinnerurl = `${setwinner}?game_idcode=${gameId}`; //url a modifier
 
+                $.ajax({
+                    url: setwinnerurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
 
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.message !== undefined) {
+                    console.log(response.message);
+                        } else {
+                            alert(error + ' test error')
+                            return "error";
+                        }
+                    },
+                    error: function () {
+                        alert('ERROR check turn');
+                        //whosturn = "error";
+                    },
+                });
 
-                      } else {
-                          alert(error + ' test error')
-                          return "error";
-                      }
-                  },
-                  error: function () {
-                      alert('ERROR check turn');
-                      //whosturn = "error";
-                  },
-              });
+            }
+            function setdraw(){
+                const csrfToken = '{{ csrf_token }}';
+                const setdraw = '{% url "setdraw" game_idcode=game_idcode %}'; //nom de la bonne view
+                const setdrawurl = `${setdraw}?game_idcode=${gameId}`; //url a modifier
 
-          }
-          function checkwinner(){
-              const csrfToken = '{{ csrf_token }}';
-              const checkwinner = '{% url "checkwinner" game_idcode=game_idcode %}'; //nom de la bonne view
-              const checkwinnerurl = `${checkwinner}?game_idcode=${gameId}`; //url a modifier
+                $.ajax({
+                    url: setdrawurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
 
-              $.ajax({
-                  url: checkwinnerurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.winner !== undefined) {
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.message !== undefined) {
+                    console.log(response.message);
+                        } else {
+                            alert(error + ' test error')
+                            return "error";
+                        }
+                    },
+                    error: function () {
+                        alert('ERROR check turn');
+                        //whosturn = "error";
+                    },
+                });
 
-      let winner = response.winner;
-                  console.log(response.winner);
-                  if(winner != "none"){
-                      //alert(winner + "won the game");
-                  }
+            }
+            function checkwinner(){
+                const csrfToken = '{{ csrf_token }}';
+                const checkwinner = '{% url "checkwinner" game_idcode=game_idcode %}'; //nom de la bonne view
+                const checkwinnerurl = `${checkwinner}?game_idcode=${gameId}`; //url a modifier
 
+                $.ajax({
+                    url: checkwinnerurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.winner !== undefined) {
 
-                      } else {
-                          alert(response.winner)
+        let winner = response.winner;
+                    console.log(response.winner);
+                    if (winner !== "none") {
+                        let modalText = "";
 
-                      }
-                  },
-                  error: function () {
-                      alert('ERROR check win');
+                        if (winner === playerusername) {
+                            if (playerusername === '{{ player_2 }}') {
+                                modalText = "GG<br>You Defeated<br>" + '{{ player_1 }}';
+                            }
+                            else {
+                                modalText = "GG<br>You Defeated<br>" + '{{ player_2 }}';
 
-                  },
-              });
+                            }
+                        }
+                        else {
+                             modalText = "You LOST !";
+                        }
 
-          }
-
-          $(document).ready(function () {
-
-
-              function createGrid() {
-                  $('#GameGrid').empty();
-
-                  for (let i = 0; i < gridX; i++) {
-                      for (let j = 0; j < gridY; j++) {
-                          const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
-                          $('#GameGrid').append(newCell);
-
-                          let cellValue = getCellValueFromDatabase(i, j);
-
-                          if (cellValue === -1 || cellValue === '') {
-                              newCell.text('');
-                          } else {
-                              let value = cellValue === '0' ? 'X' : 'O';
-                              newCell.text(value);
-                              gameBoard[i][j]=value;
-                          }
-                      }
-                  }
-              }
-
-              $('#GameGrid').on('click', '.GridCell', function () {
-                  const row = parseInt($(this).attr('data-row'));
-                  const col = parseInt($(this).attr('data-col'));
-
-                  console.log(whosturn + " test");
-                  if ( whosturn === playerusername) {
-                      if (gameBoard[row][col] === '') {
-                      gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
-                      updateGrid();
-                      updateCellInDatabase(row, col, currentPlayer);
-
-                      prevGameBoard = gameBoard.map(row => row.slice());
-
-                      if (checkWin()) {
-                          alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
-                          setwinner();
-                      } else if (checkDraw()) {
-                          alert('It\'s a draw!');
-                          setdraw();
-                      } else {
-                          nextplayerturn=switchPlayer();
-                      }
-                  } else {
-                      alert('Cell already taken! Choose another.');
-                  }
-                  }
-                  else{
-                      alert("this cell is not your's to take")
-                  }
+                     openModal(modalText);
+                    }
 
 
-              });
+                        }
+                    },
+                    error: function () {
+                        alert('ERROR check win');
 
-              function refreshGrid() {
-                  createGrid();
-                  updateGrid();
-                  checkturn();
-                  checkwinner()
-              }
+                    },
+                });
 
-              setInterval(refreshGrid, 500);
-          });
+            }
 
-          function getCellValueFromDatabase(row, col) {
-              const csrfToken = '{{ csrf_token }}';
-              let cellValue = -1;
-              const getCellValueFromDatabaseUrl = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
-              const cellurl = `${getCellValueFromDatabaseUrl}?game_idcode=${gameId}`;
-
-              $.ajax({
-                  url: cellurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-                      row: row,
-                      col: col,
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.cellValue !== undefined) {
-                          cellValue = response.cellValue;
-                      } else {
-                          alert('Error fetching cell value from the database. Please try again.');
-                      }
-                  },
-                  error: function () {
-                      alert('Error fetching cell value from the database. Please try again.');
-                  },
-              });
-
-              return cellValue;
-          }
-function surrender(){
-              const csrfToken = '{{ csrf_token }}';
-              const surrender = '{% url "surrender" game_idcode=game_idcode %}'; //nom de la bonne view
-              const surrenderurl = `${surrender}?game_idcode=${gameId}`; //url a modifier
-              const username = '{{ user.username}}' ;
-            console.log(username);
-              $.ajax({
-                  url: surrenderurl,
-                  method: 'POST',
-                  data: {
-                      game_code: gameId,
-                        playername:username,
-                      csrfmiddlewaretoken: csrfToken,
-                  },
-                  async: false,
-                  success: function (response) {
-                      if (response.message !== undefined) {
-                  console.log(response.message);
+            $(document).ready(function () {
 
 
+                function createGrid() {
+                    $('#GameGrid').empty();
 
-                      } else {
-                          alert(error + ' test error')
-                          return "error";
-                      }
-                  },
-                  error: function () {
-                      alert('ERROR check turn');
-                      //whosturn = "error";
-                  },
-              });
+                    for (let i = 0; i < gridX; i++) {
+                        for (let j = 0; j < gridY; j++) {
+                            const newCell = $(`<div class="GridCell" data-row="${i}" data-col="${j}"></div>`);
+                            $('#GameGrid').append(newCell);
 
-          }
+                            let cellValue = getCellValueFromDatabase(i, j);
 
-    </script>
+                            if (cellValue === -1 || cellValue === '') {
+                                newCell.text('');
+                            } else {
+                                let value = cellValue === '0' ? 'X' : 'O';
+                                newCell.text(value);
+                                gameBoard[i][j]=value;
+                            }
+                        }
+                    }
+                }
+                createGrid();
+                $('#GameGrid').on('click', '.GridCell', function () {
+                    const row = parseInt($(this).attr('data-row'));
+                    const col = parseInt($(this).attr('data-col'));
 
-{% endblock %}
+                    console.log(whosturn + " test");
+                    if ( whosturn === playerusername) {
+                        if (gameBoard[row][col] === '') {
+                        gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
+                        updateGrid();
+                        updateCellInDatabase(row, col, currentPlayer);
 
-{% block content %}
+                        prevGameBoard = gameBoard.map(row => row.slice());
+
+                        if (checkWin()) {
+                            alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
+                            setwinner();
+                        } else if (checkDraw()) {
+                            alert('It\'s a draw!');
+                            setdraw();
+                        } else {
+                            nextplayerturn=switchPlayer();
+                        }
+                    } else {
+                        alert('Cell already taken! Choose another.');
+                    }
+                    }
+                    else{
+                        alert("this cell is not your's to take")
+                    }
+
+
+                });
+
+                function refreshGrid() {
+                    createGrid();
+                    updateGrid();
+                    checkturn();
+                    checkwinner()
+                }
+
+                setInterval(refreshGrid, 550);
+            });
+
+            function getCellValueFromDatabase(row, col) {
+                const csrfToken = '{{ csrf_token }}';
+                let cellValue = -1;
+                const getCellValueFromDatabaseUrl = '{% url "get_cell_value_from_database" game_idcode=game_idcode %}';
+                const cellurl = `${getCellValueFromDatabaseUrl}?game_idcode=${gameId}`;
+
+                $.ajax({
+                    url: cellurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
+                        row: row,
+                        col: col,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.cellValue !== undefined) {
+                            cellValue = response.cellValue;
+                        } else {
+                            alert('Error fetching cell value from the database. Please try again.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error fetching cell value from the database. Please try again.');
+                    },
+                });
+
+                return cellValue;
+            }
+  function surrender(){
+                const csrfToken = '{{ csrf_token }}';
+                const surrender = '{% url "surrender" game_idcode=game_idcode %}'; //nom de la bonne view
+                const surrenderurl = `${surrender}?game_idcode=${gameId}`; //url a modifier
+                const username = '{{ user.username}}' ;
+              console.log(username);
+                $.ajax({
+                    url: surrenderurl,
+                    method: 'POST',
+                    data: {
+                        game_code: gameId,
+                          playername:username,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    async: false,
+                    success: function (response) {
+                        if (response.message !== undefined) {
+                    console.log(response.message);
+
+
+
+                        } else {
+                            alert(error + ' test error')
+                            return "error";
+                        }
+                    },
+                    error: function () {
+                        alert('ERROR check turn');
+                        //whosturn = "error";
+                    },
+                });
+
+            }
+  function openModal(text) {
+    document.getElementById('modalText').innerHTML = text;
+    document.getElementById('myModal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('myModal').style.display = 'none';
+  }
+  function returnHome() {
+    // Replace 'your_destination_page' with the actual URL or route
+    window.location.href = '{% url "morpion-home" %}';
+  }
+
+</script>
+
+{% endblock %} {% block content %}
 <div class="GameInfo">
-<h1>Tic-Tac-Toe Game</h1>
+  <h1>Tic-Tac-Toe Game</h1>
 
-<div class="Versus">
-<h2>
-{{ player_1 }}
-</h2>
-<h2>
-VS
-</h2>
-<h2>
-{{ player_2 }}
-</h2>
-</div>
-<div></div>
-
+  <div class="Versus">
+    <h2>{{ player_1 }}</h2>
+    <h2>VS</h2>
+    <h2>{{ player_2 }}</h2>
+  </div>
+  <div></div>
 </div>
 
+<div id="myModal" class="modal">
+  <div class="modal-content">
 
-
-    <div class="GameScene">
-     <div id="GameGrid">
+    <p id="modalText"></p>
+    <button class="button" onclick="returnHome()">Return Home</button>
+  </div>
 </div>
+
+<div class="GameScene">
+  <div id="GameGrid"></div>
 </div>
 
-<button class="surrender" onclick="surrender()">SURRENDER</button>
-{% endblock %}
-
-{% block script_variable %}
-
-{% endblock %}
-
-
-
-
-
-
-
+<div class="surrender-container">
+  <button class="surrender" onclick="surrender()">SURRENDER</button>
+</div>
+{% endblock %} {% block script_variable %} {% endblock %}

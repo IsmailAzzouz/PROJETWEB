@@ -2,8 +2,62 @@
 {% block title %}
     HOME
 {% endblock %}
-{% block css %}<link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}">{% endblock %}
+{% block css %}<link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}">
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 
+  .modal-content {
+    background-color: #6a5acd; /* Purple background color */
+    margin: auto;
+    margin-top: 15%; /* Adjust the margin-top to vertically center the modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; /* Adjust the width as needed */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center;
+    color: #fff; /* White text color */
+    position: relative; /* Added for centering */
+  }
+
+  .close {
+    color: #fff; /* White text color */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .button {
+    background-color: #fff; /* White button background color */
+    color: #6a5acd; /* Purple button text color */
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+
+{% endblock %}
+{% block JS %}
+
+
+
+
+
+{% endblock %}
 {% block content %}
 
 <div class="Main-Content">
@@ -62,5 +116,18 @@
   </div>
 </div>
 
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <p id="modalText"></p>
+    <button class="button" onclick="closeModal()">Close</button>
+  </div>
+</div>
 
+{% endblock %}
+   {% block script_variable %}
+<script>
+message = '{{ message }}';
+
+</script><script src="{% static 'JS/SCRIPT_index.js' %}"></script>
 {% endblock %}
