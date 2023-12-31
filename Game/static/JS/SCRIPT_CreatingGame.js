@@ -33,13 +33,16 @@ $(document).ready(function () {
                     if (data.errors.alignment) {
                         errorMessage += 'Alignment : ' + data.errors.alignment + '\n' + ' \n';
                     }
+                    if(data.errors.title){
+                        errorMessage += 'Game Title : ' + data.errors.title + '\n' + ' \n';
+                    }
 
                     // Affiche un message d'alerte avec les erreurs, le cas échéant
                     if (errorMessage !== '') {
                         alert(errorMessage);
                     } else {
                         // Si aucune erreur spécifique, affiche un message générique
-                          alert("Grid X is a required field \nGrid Y is a required field \nAlignment is a required field");
+                          alert("Grid X is a required field \nGrid Y is a required field \nAlignment is a required field \nGame Title is a required field");
                     }
                 }
             },

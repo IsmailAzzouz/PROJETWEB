@@ -8,6 +8,8 @@ class Profile(models.Model):
     image = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     user_score = models.PositiveIntegerField(default=0)
     user_rank = models.PositiveIntegerField(default=0)
+    user_gameplayed = models.PositiveIntegerField(default=0)
+    user_game_won = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f'{self.user.username} Profile'
 

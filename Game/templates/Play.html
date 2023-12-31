@@ -127,8 +127,14 @@ transition: 0.5s;
                 // Construire la chaîne HTML avec la boucle for
                 var htmlString = '<ul>';
                 $.each(data, function(index, game) {
-                    htmlString += '<li>GAME: ' + game.code + ' - GRID: ' + game.grid_X + ' x ' + game.grid_Y + ' - ALIGNEMENT: ' + game.alignement +
+                    if(game.title !==""){
+                         htmlString += '<li>GAME: ' + game.title + ' - GRID: ' + game.grid_X + ' x ' + game.grid_Y + ' - ALIGNEMENT: ' + game.alignement +
                         ' <button class="join-button" data-game-code="' + game.code + '">Join</button></li>';
+                    }else{
+                         htmlString += '<li>GAME: ' + game.id_code + ' - GRID: ' + game.grid_X + ' x ' + game.grid_Y + ' - ALIGNEMENT: ' + game.alignement +
+                        ' <button class="join-button" data-game-code="' + game.code + '">Join</button></li>';
+                    }
+
                 });
                 htmlString += '</ul>';
 

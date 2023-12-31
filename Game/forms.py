@@ -6,7 +6,7 @@ from .models import Game
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['private', 'grid_x', 'grid_y', 'alignment']
+        fields = ['private', 'grid_x', 'grid_y', 'alignment', 'game_title']
 
 
 class JoinGameForm(forms.Form):

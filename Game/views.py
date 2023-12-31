@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import HttpResponse, get_object_or_404
+
+from users.models import Profile
 from .forms import GameForm, JoinGameForm
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_GET, require_POST
@@ -23,6 +25,7 @@ def create_game(request):
             grid_x = request.POST.get('grid_x')
             grid_y = request.POST.get('grid_y')
             alignment = request.POST.get('alignment')
+            title = request.POST.get('game_title')
 
             if grid_x and (int(grid_x) < 3 or int(grid_x) > 12):
                 errors['grid_x'] = 'Grid X must be between 3 and 12.'
@@ -32,6 +35,8 @@ def create_game(request):
 
             if alignment and (int(alignment) > max(int(grid_x), int(grid_y)) or int(alignment) < 3):
                 errors['alignment'] = 'Alignment should be between 3 and X/Y.'
+            if title is None or title == "":
+                errors['title'] = "Game Title is a required field & must less or equal to 128 characters"
 
             if not errors:
                 # Create and save the Game instance
@@ -39,6 +44,7 @@ def create_game(request):
                 game.player_1 = request.user
                 game.player_2 = None
                 game.nextplayer = request.user
+                game.game_title = title
                 game.save()
 
                 request.session['game_code'] = game.id_code
@@ -257,7 +263,8 @@ def generategametable(request):
 
     # Convertir le QuerySet en une liste de dictionnaires
     scoreboard_data = [
-        {'code': game.id_code, 'grid_X': game.grid_x, 'grid_Y': game.grid_y, 'alignement': game.alignment, } for game in
+        {'code': game.id_code, 'grid_X': game.grid_x, 'grid_Y': game.grid_y, 'alignement': game.alignment,
+         'title': game.game_title, } for game in
         games]
 
     return JsonResponse(scoreboard_data, safe=False)
@@ -325,7 +332,6 @@ def checkturn(request, game_idcode):
 
 
 def setwinner(request, game_idcode):
-
     game = get_object_or_404(Game, id_code=game_idcode)
     game.winner = game.nextplayer
     game.isfinished = True
@@ -335,7 +341,7 @@ def setwinner(request, game_idcode):
     else:
         cells = Cell.objects.filter(grid=game.grid, value="1").count()
     winner = game.nextplayer
-    winner.profile.user_score = winner.profile.user_score + ((100/cells)*10)
+    winner.profile.user_score = winner.profile.user_score + ((100 / cells) * 10)
     winner.save()
     game.save()
     game.player_1.save()
@@ -367,17 +373,40 @@ def surrender(request, game_idcode):
     try:
         playername = request.POST.get('playername', '')
         game = get_object_or_404(Game, id_code=game_idcode)
+        game.player_2.profile.user_gameplayed += 1
+        game.player_1.profile.user_gameplayed += 1
 
         if game.player_1.username == playername:
             game.winner = game.player_2
+
         else:
             game.winner = game.player_1
 
         game.isfinished = True
         game.has_surrendered = True
         game.save()
+        game.winner.profile.user_game_won += 1
+        game.player_1.save()
+        game.player_2.save()
         print(playername)
         return JsonResponse({'message': 'game saved successfully'})
 
     except Exception as e:
         return JsonResponse({'error': str(e)})
+
+
+def scoreboard(request):
+    users = Profile.objects.all().order_by('user_rank')
+
+    # Calculate ratio for each user
+    for user in users:
+        if user.user_gameplayed != 0:
+            user.ratio = user.user_game_won / user.user_gameplayed
+        else:
+            user.ratio = 0  # Set a default value if user has not played any games
+
+    context = {
+        'users': users,
+    }
+    return render(request, "ScoreBoard.html", context)
+

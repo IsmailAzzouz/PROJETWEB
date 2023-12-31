@@ -255,8 +255,13 @@
         });
 
         let userRank = sortedWinners.indexOf('{{ user.username }}') + 1;
+        if(sortedWinners.length>100){
+            playerscoredisplay.innerHTML += "<br>Rank: " + userRank + " out of " + sortedWinners.length;
+        }
+        else{
+            playerscoredisplay.innerHTML += "<br>Rank: " + userRank + " out of " + "100";
+        }
 
-        playerscoredisplay.innerHTML += "<br>Rank: " + userRank + " out of " + sortedWinners.length;
     } else {
         console.error('Error:', response.error);
     }

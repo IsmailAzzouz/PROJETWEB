@@ -36,9 +36,13 @@
     -Get score joueur in config side<<<<<<<<<<<<<<<<<<<<FINISHED
 WHAT TO ADD GENERALLY:
 
-    -ADDING A GAME TITLE   
+    -ADDING A GAME TITLE<<<<<<<<<<<<<<<<<<<<FINISHED
 
-    -SCOREBOARD
+    -SCOREBOARD<<<<<<<<<<<<<<<<<<<<FINISHED
+
+    -GENERATE RANDOM USERS<<<<<<<<<<<<<<<<<<<<FINISHED
+
+    -SEARCHBAR IN SCOREBOARD WITH PAGINATION SYSTEM<<<<<<<<<<<<<<<<<<<<FINISHED
 
     -FIX CSS FOR LOGIN REGISTER LOGOUT
 

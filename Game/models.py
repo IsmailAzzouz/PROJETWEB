@@ -25,6 +25,7 @@ class Game(models.Model):
     nextplayer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='nextplayer_games',
                                db_column='nextplayer')
     game_date = models.DateField(auto_now_add=True)
+    game_title = models.CharField(max_length=128, default="", unique=False)
     def __str__(self):
         return f"Game {self.id_code}"
 

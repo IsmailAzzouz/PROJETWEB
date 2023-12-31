@@ -1,0 +1,146 @@
+{% extends "BASE.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_ScoreBoard.css' %}">
+{% endblock %}
+{% block title %}
+    SCOREBOARD
+{% endblock %}
+{% block JS %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="scoreboard-container">
+        <h2>SCOREBOARD</h2>
+
+        <!-- Add a search bar -->
+        <div class="search-container">
+            <label for="usernameSearch">Search by Username:</label>
+            <input type="text" id="usernameSearch" oninput="filterTable()" placeholder="Enter username">
+        </div>
+
+        <table class="scoreboard-table" id="scoreboard-table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Rank</th>
+                <th>Score</th>
+                <th>Ratio</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr id="rows">
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ user.image.url }}" alt="Profile Image" class="profile-image">
+                            <span>{{ user.user.username }}</span>
+                        </div>
+                    </td>
+                    <td>{{ user.user_rank }}</td>
+                    <td>{{ user.user_score }}</td>
+                    <td>{{ user.ratio|floatformat:1 }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prevPage">Previous Page</button>
+            <button id="nextPage">Next Page</button>
+        </div>
+    </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('scoreboard-table');
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    const rowsPerPage = 7;
+    let currentPage = 1;
+
+    function showPage(page) {
+        const rows = Array.from(document.getElementsByTagName('tr'));
+
+        if (!rows.length) {
+            console.error('No rows found in the table');
+            return;
+        }
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            if (index === 0) {
+                // Skip the first row (category names)
+                return;
+            }
+
+            row.style.display = index >= startIndex && index < endIndex ? '' : 'none';
+        });
+    }
+
+    function updateButtons() {
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage * rowsPerPage >= table.rows.length;
+    }
+
+    function filterTable() {
+        const input = document.getElementById('usernameSearch');
+        const filter = input.value.toUpperCase();
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+            const username = rows[i].getElementsByTagName('span')[0].innerText.toUpperCase();
+            if (username.includes(filter)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+
+        // Reset to the first page when the filter is empty
+        if (filter === '') {
+            currentPage = 1;
+            showPage(currentPage);
+            updateButtons();
+        }
+    }
+
+    const searchInput = document.getElementById('usernameSearch');
+
+    // Add an event listener for the "input" event on the search input
+    searchInput.addEventListener('input', filterTable);
+
+    prevPageBtn.addEventListener('click', function () {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+            updateButtons();
+            console.log('Previous Page Clicked. Current Page:', currentPage);
+        }
+    });
+
+    nextPageBtn.addEventListener('click', function () {
+        const lastPage = Math.ceil(document.getElementsByTagName('tr').length / rowsPerPage);
+        if (currentPage < lastPage) {
+            currentPage++;
+            showPage(currentPage);
+            updateButtons();
+            console.log('Next Page Clicked. Current Page:', currentPage);
+        } else {
+            console.log('Next Page Clicked, but no next page available.');
+        }
+    });
+
+    // Initial setup
+    showPage(currentPage);
+    updateButtons();
+});
+
+        // Function to filter the table based on the entered username
+
+    </script>
+
+{% endblock %}

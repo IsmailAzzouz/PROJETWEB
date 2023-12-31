@@ -358,3 +358,17 @@ input::placeholder {
     box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
     color: white;
 }
+
+#gamesScatterPlot{
+    position: sticky;
+    margin-right: 10px;
+}
+
+canvas{
+    position: sticky;
+    margin-right: 10px;
+}
+.GetPlayerScoreFromForm{
+    padding-right: 95px;
+    padding-left: 12px;
+}
