@@ -2,17 +2,25 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'CSS/profile.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/CSS_Profile.css' %}">
 {% endblock %}
 
 {% block title %}
     PROFILE
 {% endblock %}
+{% block JS %}
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+
+{% endblock %}
 {% block content %}
-    
+    <!-- Include Chart.js -->
+
     <div class="Global-Frame">
         <div class="Left-Subsection">
+
             <article class="User">
                 <img
                         class="USER_PROFILE_PIC"
@@ -28,6 +36,7 @@
             </div>
         </div>
         <div class="Right-Subsection">
+
             <div class="Profile" id="Profile">
                 <article class="User-Data">
                     <p class="user-data-text">Rank: #{{ user.profile.user_rank }}</p>
@@ -37,9 +46,15 @@
                     </p>
                 </article>
                 <article class="LastGamePlayed">
-                    <span id="loose"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
-                    <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
-                    <span id="win"><p>Jhon doe</p><p>VS</p><p>The Ridler</p></span>
+                    {% for game in last_3_games %}
+                        {% if game.winner == user.username %}
+                            <span id="win">
+                        {% else %}
+                            <span id="loose">
+                        {% endif %}
+                    <p>{{ game.player_1 }}</p><p>VS</p><p>{{ game.player_2 }}</p>
+                    </span>
+                    {% endfor %}
                 </article>
                 <article class="UserPreferedSymbol">
                     <div class="items">
@@ -66,26 +81,26 @@
                 </article>
             </div>
             <div class="Stats" id="StatsHistory" style="display: none">
-                <article class="User-Data">
-                    <p class="user-data-text">Rank: {{ user.profile.user_rank }}</p>
-                    <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
-                    <p class="user-data-text">
-                        Ratio : {{ user.profile.user_rank }}
-                    </p>
-                </article>
-                <article class="LastGamePlayed">
-                    <span>Game 1</span>
-                    <span>Game 1</span>
-                    <span>Game 1</span>
-                </article>
-                <article class="UserPreferedSymbol">
-                    <ul>
-                        <li><i class="fa fa-heart"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-flag"></i></li>
-                        <li><i class="fa fa-circle"></i></li>
-                    </ul>
-                </article>
+
+                <div class="GetPlayerScoreFromForm">
+                    <h2>Need a Specific config Score ?</h2>
+                    <br>
+                    <form id="game-filter-form">
+                        {% csrf_token %}
+                        <label for="x">X:</label>
+                        <input type="text" name="x" id="x" required>
+                        <label for="y">Y:</label>
+                        <input type="text" name="y" id="y" required>
+                        <label for="Alignement">Alignement:</label>
+                        <input type="text" name="Alignement" id="Alignement" required>
+                        <button type="button" onclick="filterGames()">FIND YOU CONFIG's RANK</button>
+                    </form>
+                    <p ID="PlayerScore"> Player Score : </p>
+                </div>
+
+                <canvas id="gamesScatterPlot" width="400" height="400"
+                        style="    background-color: rgba(183, 127, 227, 0.58)"></canvas>
+
             </div>
             <div class="ModifyProfile" id="Modify" style="display: none">
                 <form method="POST" enctype="multipart/form-data">
@@ -117,16 +132,15 @@
         </div>
     </div>
 
+
+
+
+{% endblock %}
+{% block script_variable %}
     <script>
-        let Profile_select = document
-            .getElementById("profileid")
-            .addEventListener("click", showProfile);
-        let ModifyProfile_Select = document
-            .getElementById("modifyid")
-            .addEventListener("click", showModify);
-        let History_Select = document
-            .getElementById("hisotryid")
-            .addEventListener("click", showStats);
+        let Profile_select = document.getElementById("profileid").addEventListener("click", showProfile);
+        let ModifyProfile_Select = document.getElementById("modifyid").addEventListener("click", showModify);
+        let History_Select = document.getElementById("hisotryid").addEventListener("click", showStats);
         let ProfileSection = document.getElementById("Profile");
         let StatsSection = document.getElementById("StatsHistory");
         let ModifySection = document.getElementById("Modify");
@@ -179,11 +193,11 @@
                 slides[i].classList.remove("next");
             }
 
-            if (next == 5) {
+            if (next === 5) {
                 next = 0;
             }
 
-            if (prev == -1) {
+            if (prev === -1) {
                 prev = 4;
             }
 
@@ -191,5 +205,137 @@
             slides[prev].classList.add("prev");
             slides[next].classList.add("next");
         }
+
+        //////////////////////////////////////////////
+
+        function filterGames() {
+            // Get form data
+            var formData = $('#game-filter-form').serialize();
+
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '{% url "filtergames" %}',  // Update the URL to your actual endpoint
+                data: formData,
+                success: function (response) {
+    console.log(response.games);
+    if (response.success) {
+        let cpt = 0;
+        let userScore = 0;
+        let winnerList = {};
+
+        // Display filtered games
+        var resultContainer = $('#result-container');
+        resultContainer.empty();  // Clear previous results
+
+        // Loop through response.games
+        $.each(response.games, function (index, game) {
+            resultContainer.append('<p>ID Code: ' + game.id_code + ', Winner: ' + game.winner + ', Date: ' + game.game_date + '</p>');
+
+            // Check if the game winner is the user
+            if (game.winner === '{{ user.username }}') {
+                cpt++;
+
+                // Update or add winner to the winnerList
+                if (winnerList.hasOwnProperty(game.winner)) {
+                    winnerList[game.winner]++;
+                } else {
+                    winnerList[game.winner] = 1;
+                }
+            }
+        });
+
+        // Update the player score display
+        var playerscoredisplay = document.getElementById('PlayerScore');
+        playerscoredisplay.innerHTML = "Player Score: " + cpt;
+
+        // Calculate rank
+        let sortedWinners = Object.keys(winnerList).sort(function (a, b) {
+            return winnerList[b] - winnerList[a];
+        });
+
+        let userRank = sortedWinners.indexOf('{{ user.username }}') + 1;
+
+        playerscoredisplay.innerHTML += "<br>Rank: " + userRank + " out of " + sortedWinners.length;
+    } else {
+        console.error('Error:', response.error);
+    }
+},
+
+
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        }
+
+        /*********************************/
+        var djangoContext = {
+            gamesData: {{ all_player_games | safe }},
+        };
+        document.addEventListener("DOMContentLoaded", function () {
+            // Extract game data from Django context
+            var gamesData = djangoContext.gamesData;
+
+            // Aggregate data by day of the week
+            var gamesByDay = {};
+            gamesData.forEach(function (game) {
+                var dayOfWeek = new Date(game.game_date).getDay(); // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
+                gamesByDay[dayOfWeek] = (gamesByDay[dayOfWeek] || 0) + 1;
+            });
+
+            // Prepare data for the scatter plot
+            var scatterData = Object.keys(gamesByDay).map(function (dayOfWeek) {
+                return {x: parseInt(dayOfWeek), y: gamesByDay[dayOfWeek]};
+            });
+
+            // Create a scatter plot using Chart.js
+            var ctx = document.getElementById('gamesScatterPlot').getContext('2d');
+            var scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Games Scatter Plot',
+                        data: scatterData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Adjust color as needed
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            ticks: {
+                                callback: function (value) {
+                                    // Convert numeric day of the week to a string
+                                    var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                                    return days[value];
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                precision: 0, // Set precision to 0 to display whole numbers only
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return 'Games played: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Your JavaScript code here
+
+
     </script>
 {% endblock %}
