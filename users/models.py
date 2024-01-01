@@ -10,6 +10,7 @@ class Profile(models.Model):
     user_rank = models.PositiveIntegerField(default=0)
     user_gameplayed = models.PositiveIntegerField(default=0)
     user_game_won = models.PositiveIntegerField(default=0)
+    user_symbol = models.CharField(max_length=255, default="Pastel")
     def __str__(self):
         return f'{self.user.username} Profile'
 

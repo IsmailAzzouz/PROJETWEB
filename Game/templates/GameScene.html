@@ -5,6 +5,13 @@
     margin: 0;
     padding: 0;
   }
+  img{
+  width: fit-content;
+  height: fit-content;
+  aspect-ratio: 1/1;
+  transform: scale(0.035);
+  left: 10%;
+  }
   /* Updated CSS for the modal */
   .modal {
     display: none;
@@ -180,6 +187,7 @@
             }
 
             function updateGrid() {
+                var imgele;
                 for (let i = 0; i < gridX; i++) {
                     for (let j = 0; j < gridY; j++) {
                         const cellValue = getCellValueFromDatabase(i, j);
@@ -188,9 +196,16 @@
                         if (cellValue === -1 || cellValue === '') {
                             cellElement.text('');
                         } else {
-                            let value= cellValue === '0' ? 'X' : 'O';
+                            let value = cellValue === '0' ? 'X' : 'O';
                             cellElement.text(value);
-                            gameBoard[i][j]=value;
+                            if(cellValue==="0"){
+                            imgele = $('<img>').attr("src", '{{ player_1_symbol }}');
+                            }
+                            else{
+                                imgele = $('<img>').attr("src", '{{ player_2_symbol }}');
+                            }
+                            $(cellElement).append(imgele); /****************************************ICICICICICICICICI*/////////////////////////////
+                            gameBoard[i][j] = value;
                         }
                     }
                 }
@@ -422,8 +437,15 @@
                             if (cellValue === -1 || cellValue === '') {
                                 newCell.text('');
                             } else {
-                                let value = cellValue === '0' ? 'X' : 'O';
+                                let value = cellValue === '0' ? 'X' : 'O';/***** ici quand on cree grid***************/
+                                if(cellValue==="0"){
+                                imgele = $('<img>').attr("src", '{{ player_1_symbol }}');
+                                }
+                                else{
+                                imgele = $('<img>').attr("src", '{{ player_2_symbol }}');
+                                }
                                 newCell.text(value);
+                            $(newCell).append(imgele);
                                 gameBoard[i][j]=value;
                             }
                         }
@@ -561,6 +583,7 @@
     <h2>{{ player_2 }}</h2>
   </div>
   <div></div>
+
 </div>
 
 <div id="myModal" class="modal">

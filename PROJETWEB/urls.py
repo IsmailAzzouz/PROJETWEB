@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from Game.views import *
-from users.views import filter_games
+from users.views import filter_games, change_user_symbol
 
 urlpatterns = [
                   path('', include('HelbMorpion.urls')),
@@ -31,6 +31,7 @@ urlpatterns = [
                   path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
                   path('profile/', user_views.profile, name='profile'),
                   path('profile/filtergames', filter_games, name='filtergames'),
+                  path('profile/change_user_symbol', change_user_symbol, name='change_user_symbol'),
                   path('create_game/', create_game, name='create_game'),
                   path('scoreboard/', scoreboard, name='scoreboard'),
                   path('waiting/', waiting_page,

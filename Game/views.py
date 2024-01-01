@@ -8,7 +8,6 @@ from users.models import Profile
 from .forms import GameForm, JoinGameForm
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_GET, require_POST
-from PROJETWEB import urls
 
 from .models import Game, Cell, Grid
 from .models import Cell
@@ -116,6 +115,10 @@ def join_game(request):
         try:
             game = Game.objects.get(id_code=game_code)
 
+            if game.player_2 and (
+                    request.user == game.player_1 or request.user == game.player_2) and game.isfinished is False:
+                return JsonResponse({'success': True})
+
             if not game.player_2:
                 # Fetch the User instance based on the username
                 user_joining = User.objects.get(username=request.user.username)
@@ -127,15 +130,17 @@ def join_game(request):
                 # Store the game code in the session
                 request.session['game_code'] = game_code
                 return JsonResponse({'success': True})
-
             else:
-                return JsonResponse({'success': False, 'message': 'Game is already full'})
+                if game.isfinished:
+                    return JsonResponse({'success': False, 'message': 'Game is already finished'})
+                else:
+
+                    return JsonResponse({'success': False, 'message': 'Game is already full'})
 
         except Game.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Game not found'})
     else:
-        return JsonResponse({'success': False,
-                             'message': 'Please enter a code'})  # if return status 404 can't get the message form the json response and show an error in console
+        return JsonResponse({'success': False, 'message': 'Please enter a code'})
 
 
 def waiting_page(request):
@@ -183,6 +188,24 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
     player_1_username = game.player_1.username
     player_2_username = game.player_2.username
     current_user_role = 'Player 1' if request.user.username == player_1_username else 'Player 2'
+    player1_symbol_mapping = {
+        "Lila": "/media/PlayersIcon/LILA/LILA_CROSS_ICON.PNG",
+        "Neon": "/media/PlayersIcon/NEON/NEON_CROSS_ICON.PNG",
+        "3Dshaped": "/media/PlayersIcon/3DSHAPED/3DSHAPED_CROSS_ICON.PNG",
+        "Green": "/media/PlayersIcon/GREEN/GREEN_CROSS_ICON.PNG",
+        "Pastel": "media/PlayersIcon/PASTEL/PASTEL_CROSS_ICON.PNG",
+    }
+    player2_symbol_mapping = {
+        "Lila": "/media/PlayersIcon/LILA/LILA_CIRCLE_ICON.PNG",
+        "Neon": "/media/PlayersIcon/NEON/NEON_CIRCLE_ICON.PNG",
+        "3Dshaped": "/media/PlayersIcon/3DSHAPED/3DSHAPED_CIRCLE_ICON.PNG",
+        "Green": "/media/PlayersIcon/GREEN/GREEN_CIRCLE_ICON.PNG",
+        "Pastel": "media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.PNG",
+    }
+
+    player_1_symbol = player1_symbol_mapping.get(game.player_1.profile.user_symbol, "")
+    player_2_symbol = player2_symbol_mapping.get(game.player_2.profile.user_symbol, "")
+
     return render(request, 'GameScene.html', {
         'player_1': player_1_username,
         'player_2': player_2_username,
@@ -191,6 +214,9 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         'game_x': game_x,
         'game_y': game_y,
         'current_user_role': current_user_role,
+        'alignement': game_alignment,
+        'player_1_symbol': player_1_symbol,
+        'player_2_symbol': player_2_symbol,
     })
 
 
@@ -409,4 +435,3 @@ def scoreboard(request):
         'users': users,
     }
     return render(request, "ScoreBoard.html", context)
-

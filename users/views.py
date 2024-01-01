@@ -123,3 +123,18 @@ def filter_games(request):
             return JsonResponse({'success': False, 'error': 'Invalid parameters'})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+@csrf_exempt  # Only for demonstration purposes, use proper CSRF protection in production
+def change_user_symbol(request):
+    if request.method == 'POST':
+        try:
+            print(request.POST.get('symbol'))
+            user = request.user
+            user.profile.user_symbol = request.POST.get('symbol')
+            user.save()
+            return JsonResponse({'success': True, })
+        except ValueError:
+            return JsonResponse({'success': False, 'error': 'Invalid parameters'})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})

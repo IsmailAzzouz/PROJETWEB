@@ -59,19 +59,20 @@
                 <article class="UserPreferedSymbol">
                     <div class="items">
                         <div class="item active">
-                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png" data-value="Pastel">
                         </div>
                         <div class=" item next">
-                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                            <img src="/media/PlayersIcon/NEON/NEONTHUMBNAIL.png" data-value="Neon">
                         </div>
                         <div class="item">
-                            <img src="/media/PlayersIcon/PASTEL/PASTELTHUMBNAIL.png">
+                            <img src="/media/PlayersIcon/LILA/LILATHUMBNAIL.png" data-value="Lila">
                         </div>
                         <div class="item">
-                            <img src="/media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.png">
+                            <img src="/media/PlayersIcon/GREEN/GREENTHUMBNAIL.png" data-value="Green">
                         </div>
+
                         <div class="item prev">
-                            <img src="/media/PlayersIcon/PASTEL/PASTEL_X_ICON.png">
+                            <img src="/media/PlayersIcon/3DSHAPED/3DSHAPEDTHUMBNAIL.png" data-value="3Dshaped">
                         </div>
                         <div class="button-container">
                             <div class="button"><i class="fas fa-angle-left"></i></div>
@@ -167,44 +168,80 @@
 
         ////////////////////////////////////
         const slider = document.querySelector(".items");
-        const slides = document.querySelectorAll(".item");
-        const button = document.querySelectorAll(".button");
+const slides = document.querySelectorAll(".item");
+const button = document.querySelectorAll(".button");
 
-        let current = 0;
-        let prev = 4;
-        let next = 1;
+let current = 0;
+let prev = 4;
+let next = 1;
 
-        for (let i = 0; i < button.length; i++) {
-            button[i].addEventListener("click", () => i == 0 ? gotoPrev() : gotoNext());
-        }
+for (let i = 0; i < button.length; i++) {
+    button[i].addEventListener("click", () => i == 0 ? gotoPrev() : gotoNext());
+}
 
-        const gotoPrev = () => current > 0 ? gotoNum(current - 1) : gotoNum(slides.length - 1);
+const gotoPrev = () => current > 0 ? gotoNum(current - 1) : gotoNum(slides.length - 1);
 
-        const gotoNext = () => current < 4 ? gotoNum(current + 1) : gotoNum(0);
+const gotoNext = () => current < 4 ? gotoNum(current + 1) : gotoNum(0);
 
-        const gotoNum = number => {
-            current = number;
-            prev = current - 1;
-            next = current + 1;
+const gotoNum = number => {
+    current = number;
+    prev = current - 1;
+    next = current + 1;
 
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].classList.remove("active");
-                slides[i].classList.remove("prev");
-                slides[i].classList.remove("next");
-            }
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active");
+        slides[i].classList.remove("prev");
+        slides[i].classList.remove("next");
+    }
 
-            if (next === 5) {
-                next = 0;
-            }
+    if (next === 5) {
+        next = 0;
+    }
 
-            if (prev === -1) {
-                prev = 4;
-            }
+    if (prev === -1) {
+        prev = 4;
+    }
 
-            slides[current].classList.add("active");
-            slides[prev].classList.add("prev");
-            slides[next].classList.add("next");
-        }
+    slides[current].classList.add("active");
+    slides[prev].classList.add("prev");
+    slides[next].classList.add("next");
+
+    // Get the data-value of the current image
+    const currentValue = slides[current].querySelector("img").getAttribute("data-value");
+
+    // Send the data-value in an AJAX function
+    sendAjaxRequest(currentValue);
+}
+
+// Replace this function with your actual AJAX implementation
+const sendAjaxRequest = (value) => {
+    // Example AJAX function
+     var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+    console.log("Sending AJAX request with value:", value);"change_user_symbol"
+    $.ajax({
+                type: 'POST',
+                url: '{% url "change_user_symbol" %}',  // Replace with the actual URL for joining a game
+                data: {symbol: value},
+                dataType: 'json',
+                headers: {"X-CSRFToken": csrftoken},  // Include the CSRF token in the headers
+                success: function (data) {
+                    if (data.success) {
+                        // Redirect to the game page upon successful join
+                        console.log("profile updated succefully");  // Replace with the actual URL for waiting
+                    } else {
+                        // Handle errors (e.g., display error messages)
+                        alert('Error: '+ data.message);
+                        console.log(data.message);
+                        console.log(data);
+                    }
+                },
+                error: function (data) {
+                    alert("Error : " + data.message);
+                    console.log(data);
+                }
+            });
+    // Add your AJAX logic here
+}
 
         //////////////////////////////////////////////
 
