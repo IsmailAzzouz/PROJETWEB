@@ -76,13 +76,14 @@ def profile(request):
         }
         for game in filtered_games
     ]
-
+    user_ratio = request.user.profile.user_game_won / request.user.profile.user_gameplayed
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
         'Games': games,
         'last_3_games': last_3_games_data,
         'all_player_games': games_data,
+        'ratio': user_ratio,
     }
 
     return render(request, 'users/profile.html', context, )

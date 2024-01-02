@@ -42,7 +42,7 @@
                     <p class="user-data-text">Rank: #{{ user.profile.user_rank }}</p>
                     <p class="user-data-text">Score: {{ user.profile.user_score }}</p>
                     <p class="user-data-text">
-                        Ratio : {{ user.profile.user_rank }}
+                        Ratio : {{ ratio|floatformat:1}}
                     </p>
                 </article>
                 <article class="LastGamePlayed">

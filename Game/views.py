@@ -217,6 +217,7 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         'alignement': game_alignment,
         'player_1_symbol': player_1_symbol,
         'player_2_symbol': player_2_symbol,
+        'gametitle':game.game_title,
     })
 
 
