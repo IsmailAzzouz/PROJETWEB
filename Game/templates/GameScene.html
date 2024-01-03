@@ -140,7 +140,7 @@
 {% endblock %} {% block title %}PLAYING{% endblock %} {% block JS %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
+        let game_alignement = {{ alignement }};
               let gridX = {{ game_x }};
             let gridY = {{ game_y }};
             let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
@@ -211,43 +211,85 @@
                 }
             }
 
-            function checkWin() {
-                for (let i = 0; i < gridX; i++) {
-                    if (
-                        gameBoard[i][0] !== '' &&
-                        gameBoard[i].every((cell) => cell === gameBoard[i][0])
-                    ) {
-                        return true;
-                    }
-                }
+             function checkWin() {
 
-                for (let i = 0; i < gridY; i++) {
-                    if (
-                        gameBoard[0][i] !== '' &&
-                        gameBoard.every((row) => row[i] === gameBoard[0][i])
-                    ) {
-                        return true;
-                    }
-                }
-
+        if (gridX === gridY && gridX === game_alignement) {
+            alert("yes ");
+            for (let i = 0; i < gridX; i++) {
                 if (
-                    gameBoard[0][0] !== '' &&
-                    gameBoard.every((row, index) => row[index] === gameBoard[0][0])
+                    gameBoard[i][0] !== '' &&
+                    gameBoard[i].every((cell) => cell === gameBoard[i][0])
                 ) {
                     return true;
                 }
-
-                if (
-                    gameBoard[0][gridY - 1] !== '' &&
-                    gameBoard.every(
-                        (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
-                    )
-                ) {
-                    return true;
-                }
-
-                return false;
             }
+
+            for (let i = 0; i < gridY; i++) {
+                if (
+                    gameBoard[0][i] !== '' &&
+                    gameBoard.every((row) => row[i] === gameBoard[0][i])
+                ) {
+                    return true;
+                }
+            }
+
+            if (
+                gameBoard[0][0] !== '' &&
+                gameBoard.every((row, index) => row[index] === gameBoard[0][0])
+            ) {
+                return true;
+            }
+
+            if (
+                gameBoard[0][gridY - 1] !== '' &&
+                gameBoard.every(
+                    (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
+                )
+            ) {
+                return true;
+            }
+        } else {
+            alert("no ");
+            for (let i = 0; i < game_alignement; i++) {
+                if (
+                    gameBoard[i][0] !== '' &&
+                    gameBoard[i].slice(0, game_alignement).every((cell) => cell === gameBoard[i][0])
+                ) {
+                    return true;
+                }
+            }
+
+
+            for (let i = 0; i < game_alignement; i++) {
+                if (
+                    gameBoard[0][i] !== '' &&
+                    gameBoard.slice(0, game_alignement).every((row) => row.slice(0, game_alignement)[i] === gameBoard[0][i])
+                ) {
+                    return true;
+                }
+            }
+
+
+            if (
+                gameBoard[0][0] !== '' &&
+                gameBoard.slice(0, game_alignement).every((row, index) => row.slice(0, game_alignement)[index] === gameBoard[0][0])
+            ) {
+                return true;
+            }
+
+            if (
+                gameBoard[0][game_alignement - 1] !== '' &&
+                gameBoard.slice(0, game_alignement).every(
+                    (row, index) => row.slice(0, game_alignement)[game_alignement - 1 - index] === gameBoard[0][game_alignement - 1]
+                )
+            ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
 
             function checkDraw() {
                 return gameBoard.every((row) => row.every((cell) => cell !== ''));

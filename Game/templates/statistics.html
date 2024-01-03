@@ -1,0 +1,345 @@
+{% extends "BASE.html" %}
+{% load static %}
+
+{% block css %}
+    <style>
+        .container{
+            display: flex;
+        }
+
+
+        body{overflow: auto}
+    .container {
+    width: max-content;
+    margin: 0 auto;
+    padding: 20px;
+        color: white;
+
+}
+    .container :nth-child(n){
+        padding: 25px;
+    }
+
+h2 {
+
+}
+
+p {
+
+}
+canvas{
+    color: white;
+
+}
+#gamesChart {
+    margin-top: 20px;
+    color: white;
+}
+
+
+table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(7, 53, 147, 0.6); /* Glassmorphism background */
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        overflow: hidden;
+
+    }
+
+    th, td {
+        padding: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        text-align: left;
+    }
+
+    th {
+        background-color: rgb(122, 16, 225);
+    }
+
+    /* Add styling for the result container */
+    #result-container {
+        margin-top: 20px;
+    }
+
+    /********************************************/
+
+
+        #game-filter-form button {
+  background-color: rgb(160, 93, 185);
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+    font-family: Inter;
+    transition: 0.5s;
+}
+
+#game-filter-form button:hover {
+  background-color: rgb(213, 122, 245);
+    padding: 10px 13px 10px 13px;
+    transition: 0.5s;
+}
+
+
+/**************************/
+        #game-filter-form input{
+    border-radius: 10px;
+    filter: drop-shadow(2.5px 2.5px 0px #a11bce);
+    border-style: none;
+    padding: 4px;
+    transition: 0.2s;
+    padding: 2.5px;
+    font-family: Inter;
+    background-color: rgb(24, 25, 27);
+    box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+    color: white;
+    margin: 12px;
+}
+#game-filter-form .GetPlayerScoreFromForm label {
+    display: block;
+    margin-bottom: 8px;
+}
+#game-filter-form .GetPlayerScoreFromForm button {
+    background-color: rgb(160, 93, 185);
+    color: #fff;
+    padding: 10px 10px 10px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: Inter;
+    transition: 0.5s;
+}
+
+#game-filter-form .GetPlayerScoreFromForm button:hover {
+    background-color: rgb(213, 122, 245);
+    padding: 10px 13px 10px 13px;
+    transition: 0.5s;
+}
+
+#game-filter-form .GetPlayerScoreFromForm {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 500px;
+    height: 500px;
+    position: sticky;
+    margin-top: 155px;
+    left: calc(50% - 250px);
+    transform: scale(1.5);
+    left: calc(50% - 250px);
+}
+
+#game-filter-form .GetPlayerScoreFromForm input {
+    transition: 0.2s;
+    padding: 2.5px;
+    font-family: Inter;
+    background-color: rgb(24, 25, 27);
+    box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+    color: white;
+}
+
+#game-filter-form .GetPlayerScoreFromForm input[type="number"]::-webkit-inner-spin-button,
+#game-filter-form .GetPlayerScoreFromForm input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#game-filter-form .GetPlayerScoreFromForm input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+#game-filter-form .GetPlayerScoreFromForm input:focus-visible {
+    transition: 0.2s;
+    padding: 8px;
+    filter: drop-shadow(2.5px 2.5px 0px #375cd5);
+    border: 1px solid #375cd5;
+    background-color: rgb(24, 25, 27);
+    caret-color: #375cd5;
+    outline: solid 1px transparent;
+    backdrop-filter: blur(30px);
+    color: white;
+}
+#game-filter-form input:focus-visible {
+  transition: 0.2s;
+  padding: 8px;
+  filter: drop-shadow(2.5px 2.5px 0px #375cd5);
+  border: 1px solid #375cd5;
+  background-color: rgb(24, 25, 27);
+  caret-color: #375cd5;
+  outline: solid 1px transparent;
+  backdrop-filter: blur(30px);
+  color: white;
+  font-family: Inter;
+}
+
+input::placeholder {
+    transition: 0.2s;
+    padding: 2.5px;
+    font-family: Inter;
+    background-color: rgb(24, 25, 27);
+    box-shadow: 0.5px 0.5px 10px 0.5px #a01bcc;
+    color: white;
+}
+
+
+
+canvas{
+    position: sticky;
+    margin-right: 10px;
+}
+.GetPlayerScoreFromForm{
+    padding-right: 95px;
+    padding-left: 12px;
+}
+
+
+    </style>
+{% endblock %}
+{% block title %}
+    STATISTICS
+{% endblock %}
+{% block JS %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="chartsstts">
+
+        <h2>Statistics</h2>
+        <p>Total games played this week: {{ games_this_week }}</p>
+        <p>User of the week: {{ user_of_the_week.username }}</p>
+
+        <!-- Add Chart.js chart here -->
+        <canvas id="gamesChart" width="400" height="300"></canvas>
+    </div>
+
+<div class="searchbyconfig">
+
+        <div class="GetPlayerScoreFromForm">
+                    <h2>Need a Specific config Score for a Certain config ?</h2>
+                    <br>
+                    <form id="game-filter-form">
+                        {% csrf_token %}
+                        <label for="x">X:</label>
+                        <input type="text" name="x" id="x" required>
+                        <label for="y">Y:</label>
+                        <input type="text" name="y" id="y" required>
+                        <label for="Alignement">Alignement:</label>
+                        <input type="text" name="Alignement" id="Alignement" required>
+                        <button type="button" onclick="filterGames()">FIND YOU CONFIG's RANK</button>
+                    </form>
+                    <div id="result-container"></div>
+                </div>
+</div>
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Use Ajax to get data for the chart
+                // Example:
+                // Fetch data from the server using Ajax and populate the chart
+                var ctx = document.getElementById('gamesChart').getContext('2d');
+
+                // Example data for testing, replace it with actual data from the server
+                var chartData = {
+                    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                    datasets: [{
+                        label: 'Games Played This Week',
+                        data: [5, 10, 8, 15, 12, 7, 9],  // Replace with actual data
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+            function filterGames() {
+            // Get form data
+            var formData = $('#game-filter-form').serialize();
+
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '{% url "filtergames" %}',
+                data: formData,
+            success: function (response) {
+    console.log(response.games);
+    if (response.success) {
+        let userGames = response.games;
+        let userStats = {};
+
+
+        $.each(userGames, function (index, game) {
+            if (!userStats[game.winner]) {
+                userStats[game.winner] = 0;
+            }
+            userStats[game.winner]++;
+        });
+
+
+        let sortedUsers = Object.keys(userStats).sort(function (a, b) {
+            return userStats[b] - userStats[a];
+        });
+
+
+        var table = $('<table>').addClass('table');
+        var thead = $('<thead>').append($('<tr>').append('<th>Rank</th><th>Username</th><th>Won Games</th>'));
+        var tbody = $('<tbody>');
+
+        $.each(sortedUsers, function (rank, username) {
+            let wonGames = userStats[username];
+            tbody.append($('<tr>').append('<td>' + (parseInt(rank) + 1) + '</td><td>' + username + '</td><td>' + wonGames + '</td>'));
+        });
+
+        table.append(thead).append(tbody);
+
+
+        var resultContainer = $('#result-container');
+        resultContainer.empty().append(table);
+
+
+
+        let userRank = sortedUsers.indexOf('{{ user.username }}') + 1;
+        if (sortedUsers.length > 100) {
+
+        } else {
+
+        }
+
+    } else {
+        console.error('Error:', response.error);
+    }
+},
+
+
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        }
+        </script>
+
+
+    </div>
+{% endblock %}
+

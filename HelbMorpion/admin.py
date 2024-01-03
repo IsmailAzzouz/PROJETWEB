@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, CommunityMessage
 
 # Register your models here.
-# admin.site.register(User) permet de gerer ce model dans la page admin
+admin.site.register(CommunityMessage)

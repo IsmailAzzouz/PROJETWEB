@@ -372,3 +372,31 @@ canvas{
     padding-right: 95px;
     padding-left: 12px;
 }
+#game-filter-form input:focus-visible {
+  transition: 0.2s;
+  padding: 8px;
+  filter: drop-shadow(2.5px 2.5px 0px #375cd5);
+  border: 1px solid #375cd5;
+  background-color: rgb(24, 25, 27);
+  caret-color: #375cd5;
+  outline: solid 1px transparent;
+  backdrop-filter: blur(30px);
+  color: white;
+  font-family: Inter;
+}
+       #game-filter-form button {
+  background-color: rgb(160, 93, 185);
+  color: #fff;
+  padding: 10px 10px 10px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+    font-family: Inter;
+    transition: 0.5s;
+}
+
+#game-filter-form button:hover {
+  background-color: rgb(213, 122, 245);
+    padding: 10px 13px 10px 13px;
+    transition: 0.5s;
+}

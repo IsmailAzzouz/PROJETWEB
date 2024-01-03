@@ -1,0 +1,116 @@
+{%extends "BASE.html"%} {% load static %}
+{% block title %}
+    ABOUT
+{% endblock %}
+{% block css %}
+<style>
+.container{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100vh;
+    width: 100%;
+}
+#about-container {
+
+            background-color: #27273f;
+            border-radius: 10px;
+            padding: 20px;
+            color: #fff;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: #9c27b0;
+        }
+
+        h2 {
+            color: #03a9f4;
+            cursor: pointer;
+            transition: color 0.3s;
+            margin-bottom: 0;
+        }
+
+        h2:hover {
+            color: #2196f3;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        .visible {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
+</style>
+
+{% endblock %}
+{% block JS %}
+
+
+
+
+
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+    <div id="about-container">
+        <h1>About Me</h1>
+        <p>Welcome to my world of innovation and gaming!</p>
+
+        <h2 onclick="toggleContent('gameDetails')">HelbTicTacToe: A Game-Changer</h2>
+        <div id="gameDetails" class="hidden">
+            <p>HelbTicTacToe isn't just a game; it's a masterpiece crafted with precision and dedication. With an intuitive interface, sleek design, and advanced AI algorithms, it takes the classic TicTacToe to a whole new level of excitement.</p>
+            <p>The game features:</p>
+            <ul>
+                <li>Strategic AI that adapts to your gameplay</li>
+                <li>Sleek and modern design for an immersive experience</li>
+                <li>Multiplayer mode for challenging friends and family</li>
+                <li>And much more...</li>
+            </ul>
+        </div>
+
+        <h2 onclick="toggleContent('devJourney')">Development Journey</h2>
+        <div id="devJourney" class="hidden">
+            <p>The development of HelbTicTacToe was fueled by a desire to create a game that not only entertains but also challenges the mind. Countless hours of coding, testing, and refining went into perfecting every aspect of the game. The result is a game that stands as a testament to my commitment to excellence.</p>
+            <p>Feel free to explore HelbTicTacToe and experience the thrill of a timeless classic reimagined for the modern era!</p>
+        </div>
+         <h2 onclick="toggleContent('reality')">Reality of things</h2>
+        <div id="reality" class="hidden">
+            <p>In reality this webpage is a Satire of my curiosity to see what could CHATGPT write about me</p>
+            <p>Feel free to explore HelbTicTacToe and experience all the hidden things in it</p>
+        </div>
+    </div>
+    </div>
+
+
+    <script>
+        function toggleContent(id) {
+            var content = document.getElementById(id);
+            content.classList.toggle('visible');
+            content.classList.toggle('hidden');
+        }
+    </script>
+
+
+
+{% endblock %}
+   {% block script_variable %}
+
+{% endblock %}

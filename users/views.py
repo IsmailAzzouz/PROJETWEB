@@ -10,17 +10,28 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from Game.models import Game
 
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Save the user
+            user = form.save()
+
+            # Log in the user
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account zeby {username}')
+            password = form.cleaned_data.get('password1')  # Assuming you have password fields in your form
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+
+            messages.success(request, f'Account created successfully. You are now logged in.')
             return redirect('morpion-home')
     else:
         form = UserRegisterForm()
+
     return render(request, 'users/register.html', {'form': form})
 
 
@@ -76,7 +87,10 @@ def profile(request):
         }
         for game in filtered_games
     ]
-    user_ratio = request.user.profile.user_game_won / request.user.profile.user_gameplayed
+    if request.user.profile.user_gameplayed > 0:
+        user_ratio = request.user.profile.user_game_won / request.user.profile.user_gameplayed
+    else:
+        user_ratio = 0
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
@@ -107,7 +121,7 @@ def filter_games(request):
                 isfinished=True,
             )
 
-            # You can customize this response based on your needs
+
             games_data = [
                 {
                     'id_code': game.id_code,
@@ -115,10 +129,11 @@ def filter_games(request):
                     'grid_y': game.grid_y,
                     'winner': getattr(game.winner, 'username', None),
                     'game_date': game.game_date.strftime('%Y-%m-%d'),
+                    'winner_image': game.winner.profile.image.path,
                 }
                 for game in filtered_games
             ]
-
+            #print(games_data)
             return JsonResponse({'success': True, 'games': games_data})
         except ValueError:
             return JsonResponse({'success': False, 'error': 'Invalid parameters'})

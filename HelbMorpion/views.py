@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from Game.models import Game
+from HelbMorpion.forms import CommunityMessageForm
 
 
 # Create your views here.
@@ -25,8 +26,23 @@ def home(request):
 
             pass
     request.session['game_code'] = ""
-    context = {"message": message,}
-    return render(request, 'index.html', context,)
+    context = {"message": message, }
+    return render(request, 'index.html', context, )
+
 
 def about(request):
-    return HttpResponse("<h1>about</h1>")
+    return render(request, 'About.html')
+def succespage(request):
+    return render(request, 'succesmessage.html')
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = CommunityMessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # You can add additional logic here, like sending an email or showing a success message.
+            return redirect('success_page')  # Replace 'success_page' with the actual success page name or URL.
+    else:
+        form = CommunityMessageForm()
+
+    return render(request, 'contact.html', {'form': form})

@@ -1,17 +1,19 @@
 # views.py
 from django.contrib.auth.models import User
+from django.db.models import Count, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import HttpResponse, get_object_or_404
 
 from users.models import Profile
+from . import models
 from .forms import GameForm, JoinGameForm
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import Game, Cell, Grid
 from .models import Cell
-
+from django.db.models import Q
 from django.http import JsonResponse
 
 
@@ -217,7 +219,7 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         'alignement': game_alignment,
         'player_1_symbol': player_1_symbol,
         'player_2_symbol': player_2_symbol,
-        'gametitle':game.game_title,
+        'gametitle': game.game_title,
     })
 
 
@@ -436,3 +438,26 @@ def scoreboard(request):
         'users': users,
     }
     return render(request, "ScoreBoard.html", context)
+
+
+def statistics(request):
+    # Retrieve the total number of games played this week
+    games_this_week = Game.objects.filter(game_date__week=F('game_date__week')).count()
+
+    # Retrieve the user with the best winning ratio this week
+    user_of_the_week = (
+        User.objects.annotate(
+            wins=Count('winner_games', filter=Q(winner_games__game_date__week=F('winner_games__game_date__week'))),
+            total_games=Count('player_1_games') + Count('player_2_games', distinct=True)
+        )
+        .filter(total_games__gt=0)
+        .order_by('-wins', '-total_games')
+        .first()
+    )
+
+    context = {
+        'games_this_week': games_this_week,
+        'user_of_the_week': user_of_the_week,
+    }
+
+    return render(request, 'statistics.html', context)

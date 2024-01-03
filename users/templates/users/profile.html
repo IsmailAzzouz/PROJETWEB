@@ -99,8 +99,8 @@
                     <p ID="PlayerScore"> Player Score : </p>
                 </div>
 
-                <canvas id="gamesScatterPlot" width="400" height="400"
-                        style="    background-color: rgba(183, 127, 227, 0.58)"></canvas>
+                <canvas id="gamesScatterPlot" width="200" height="200"
+                        style="    background-color: rgb(235,211,255)"></canvas>
 
             </div>
             <div class="ModifyProfile" id="Modify" style="display: none">
@@ -210,26 +210,26 @@ const gotoNum = number => {
     const currentValue = slides[current].querySelector("img").getAttribute("data-value");
 
     // Send the data-value in an AJAX function
-    sendAjaxRequest(currentValue);
+    changeusersymbol(currentValue);
 }
 
 // Replace this function with your actual AJAX implementation
-const sendAjaxRequest = (value) => {
+const changeusersymbol = (value) => {
     // Example AJAX function
      var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
     console.log("Sending AJAX request with value:", value);"change_user_symbol"
     $.ajax({
                 type: 'POST',
-                url: '{% url "change_user_symbol" %}',  // Replace with the actual URL for joining a game
+                url: '{% url "change_user_symbol" %}',
                 data: {symbol: value},
                 dataType: 'json',
-                headers: {"X-CSRFToken": csrftoken},  // Include the CSRF token in the headers
+                headers: {"X-CSRFToken": csrftoken},
                 success: function (data) {
                     if (data.success) {
-                        // Redirect to the game page upon successful join
-                        console.log("profile updated succefully");  // Replace with the actual URL for waiting
+
+                        console.log("profile updated succefully");
                     } else {
-                        // Handle errors (e.g., display error messages)
+
                         alert('Error: '+ data.message);
                         console.log(data.message);
                         console.log(data);
@@ -240,7 +240,7 @@ const sendAjaxRequest = (value) => {
                     console.log(data);
                 }
             });
-    // Add your AJAX logic here
+
 }
 
         //////////////////////////////////////////////
@@ -337,7 +337,7 @@ const sendAjaxRequest = (value) => {
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        label: 'Games Scatter Plot',
+                        label: 'GAMES PLAYED THIS WEEK',
                         data: scatterData,
                         backgroundColor: 'rgba(75, 192, 192, 0.5)', // Adjust color as needed
                     }]

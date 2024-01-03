@@ -3,29 +3,102 @@
 {% block title %}
     LOGIN
 {% endblock %}
+{% block css %}
+<style>
+
+.center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.glass-container {
+    background: rgba(102, 30, 166, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(74, 32, 107, 0.65);
+    text-align: center;
+}
+
+.glass-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.glass-form {
+    margin: 0;
+}
+
+.form-element {
+    border: none;
+}
+
+.glass-legend {
+    font-size: 16px;
+    color: #fff;
+}
+
+.form-button {
+    text-align: center;
+}
+
+.glass-btn {
+    background-color: #073593;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.already {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.text {
+    color: #fff;
+}
+
+.au-cas-ou {
+    font-size: 14px;
+}
+
+.glass-link {
+    color: #0050ff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+</style>
+
+{% endblock %}
 {% block content %}
+    <div class="center-wrapper">
 
-    <p>login</p>
- <form method="POST">
-
-        {% csrf_token %}
-        <fieldset class="form-elemnt">
-            <legend class="">yes</legend>
-            {{ form.as_p}}
-
-        </fieldset>
-        <div class="form-button">
-            <button class="btn" type="submit">yep</button>
+    <div class="glass-container">
+        <p class="glass-text">Login</p>
+        <form method="POST" class="glass-form">
+            {% csrf_token %}
+            <fieldset class="form-element">
+                <legend class="glass-legend">Entre your user's Coordinates</legend>
+                {{ form.as_p }}
+            </fieldset>
+            <div class="form-button">
+                <button class="glass-btn" type="submit">Login-In</button>
+            </div>
+        </form>
+        <div class="already">
+            <small class="text au-cas-ou">Don't have an account?
+                <a href="{% url 'register' %}" class="glass-link">Sign in</a>
+            </small>
         </div>
-
-    </form>
-    <div class="already">
-
-        <small class="text au cas ou">already account ?
-        <a href="{% url 'register' %}">sign in</a>
-
-        </small>
-
     </div>
-</div>
+    </div>
+
 {% endblock %}

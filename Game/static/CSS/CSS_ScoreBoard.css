@@ -49,6 +49,9 @@
 .scoreboard-container h2 {
     text-align: center;
 }
+.scoreboard-container a {
+    text-align: center;
+}
 
 .pagination {
     margin-top: 10px;
