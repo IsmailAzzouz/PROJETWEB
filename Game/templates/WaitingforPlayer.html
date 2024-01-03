@@ -13,7 +13,7 @@
 
 {% block content %}
 
-<!-- Your waiting stage HTML -->
+
     <div class="CONTAINER">
     <div id="waiting-stage">
     <H1>Waiting <br> For <br> Another Player<br></H1>
@@ -24,11 +24,30 @@
     <div class="gamecode">
     <h2> Your game code:<br>{{ idcode }}</h2>
     </div>
+<div id="ticTacToeBoard">
+                <table id="board">
+                    <tr>
+                        <td class="cell" id="cell00"></td>
+                        <td class="cell" id="cell01"></td>
+                        <td class="cell" id="cell02"></td>
+                    </tr>
+                    <tr>
+                        <td class="cell" id="cell10"></td>
+                        <td class="cell" id="cell11"></td>
+                        <td class="cell" id="cell12"></td>
+                    </tr>
+                    <tr>
+                        <td class="cell" id="cell20"></td>
+                        <td class="cell" id="cell21"></td>
+                        <td class="cell" id="cell22"></td>
+                    </tr>
+                </table>
+            </div>
 
 <script>
-       //player_1=encodeURIComponent(gameData.player_1)
+
     </script>
 {% endblock %}
-<!-- jQuery script for checking game status -->
+
 
 

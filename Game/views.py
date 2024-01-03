@@ -195,14 +195,14 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         "Neon": "/media/PlayersIcon/NEON/NEON_CROSS_ICON.PNG",
         "3Dshaped": "/media/PlayersIcon/3DSHAPED/3DSHAPED_CROSS_ICON.PNG",
         "Green": "/media/PlayersIcon/GREEN/GREEN_CROSS_ICON.PNG",
-        "Pastel": "media/PlayersIcon/PASTEL/PASTEL_CROSS_ICON.PNG",
+        "Pastel": "/media/PlayersIcon/PASTEL/PASTEL_CROSS_ICON.PNG",
     }
     player2_symbol_mapping = {
         "Lila": "/media/PlayersIcon/LILA/LILA_CIRCLE_ICON.PNG",
         "Neon": "/media/PlayersIcon/NEON/NEON_CIRCLE_ICON.PNG",
         "3Dshaped": "/media/PlayersIcon/3DSHAPED/3DSHAPED_CIRCLE_ICON.PNG",
         "Green": "/media/PlayersIcon/GREEN/GREEN_CIRCLE_ICON.PNG",
-        "Pastel": "media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.PNG",
+        "Pastel": "/media/PlayersIcon/PASTEL/PASTEL_CIRCLE_ICON.PNG",
     }
 
     player_1_symbol = player1_symbol_mapping.get(game.player_1.profile.user_symbol, "")
@@ -383,11 +383,15 @@ def setwinner(request, game_idcode):
 def checkwinner(request, game_idcode):
     game = get_object_or_404(Game, id_code=game_idcode)
 
-    if game.winner == None:
-        winner = "none"
-    else:
-        winner = game.winner.username
 
+    if game.isfinished:
+        if game.winner is None:
+            winner = "draw"
+        else:
+
+            winner = game.winner.username
+    else:
+        winner = "none"
     return JsonResponse({'winner': winner})
 
 

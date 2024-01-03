@@ -135,7 +135,19 @@
 .surrender:active {
   background-color: #922b21;
 }
+.GridCell{
+display: flex;
+justify-items: center;
+align-items: center;
+justify-content: center;
 
+
+}
+.GridCell img{
+padding-right: 443px;
+width: fit-content;
+height:fit-content ;
+}
 </style>
 {% endblock %} {% block title %}PLAYING{% endblock %} {% block JS %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -181,7 +193,7 @@
                         // Handle the server response as needed
                     },
                     error: function () {
-                        alert('Error updating the cell in the database. Please try again.');
+                        console.log('Error updating the cell in the database. Please try again.');
                     },
                 });
             }
@@ -214,7 +226,7 @@
              function checkWin() {
 
         if (gridX === gridY && gridX === game_alignement) {
-            alert("yes ");
+
             for (let i = 0; i < gridX; i++) {
                 if (
                     gameBoard[i][0] !== '' &&
@@ -249,7 +261,7 @@
                 return true;
             }
         } else {
-            alert("no ");
+
             for (let i = 0; i < game_alignement; i++) {
                 if (
                     gameBoard[i][0] !== '' &&
@@ -311,10 +323,10 @@
                     async: false,
                     success: function (response) {
                         if (response.nextplayer !== undefined) {
-                            console.log(response.nextplayer);
+                            //console.log(response.nextplayer);
 
                         } else {
-                            alert('Error fetching next player from db.');
+                            console.log('Error fetching next player from db.');
                         }
                     },
                     error: function () {
@@ -340,18 +352,18 @@
                     async: false,
                     success: function (response) {
                         if (response.nextplayer !== undefined) {
-                    console.log(response.nextplayer);
+                    //console.log(response.nextplayer);
                     let turned = response.nextplayer;
-                        console.log(turned + " it s");
+                        //console.log(turned + " it s");
                                 whosturn = response.nextplayer;
 
                         } else {
-                            alert(error + ' test error')
+                            console.log(error + ' test error')
                             return "error";
                         }
                     },
                     error: function () {
-                        alert('ERROR check turn');
+                        console.log('ERROR check turn');
                         whosturn = "error";
                     },
                 });
@@ -373,14 +385,14 @@
                     async: false,
                     success: function (response) {
                         if (response.message !== undefined) {
-                    console.log(response.message);
+                    //console.log(response.message);
                         } else {
-                            alert(error + ' test error')
+                            console.log(error + ' test error')
                             return "error";
                         }
                     },
                     error: function () {
-                        alert('ERROR check turn');
+                        console.log('ERROR check turn');
                         //whosturn = "error";
                     },
                 });
@@ -402,14 +414,14 @@
                     async: false,
                     success: function (response) {
                         if (response.message !== undefined) {
-                    console.log(response.message);
+                    //.log(response.message);
                         } else {
-                            alert(error + ' test error')
+                            console.log(error + ' test error')
                             return "error";
                         }
                     },
                     error: function () {
-                        alert('ERROR check turn');
+                        console.log('ERROR check turn');
                         //whosturn = "error";
                     },
                 });
@@ -432,7 +444,7 @@
                         if (response.winner !== undefined) {
 
         let winner = response.winner;
-                    console.log(response.winner);
+                    //console.log(response.winner);
                     if (winner !== "none") {
                         let modalText = "";
 
@@ -445,6 +457,9 @@
 
                             }
                         }
+                        else if (winner==="draw"){
+                        modalText="It's a draw !";
+                        }
                         else {
                              modalText = "You LOST !";
                         }
@@ -456,7 +471,7 @@
                         }
                     },
                     error: function () {
-                        alert('ERROR check win');
+                        console.log('ERROR check win');
 
                     },
                 });
@@ -498,7 +513,7 @@
                     const row = parseInt($(this).attr('data-row'));
                     const col = parseInt($(this).attr('data-col'));
 
-                    console.log(whosturn + " test");
+                    //console.log(whosturn + " test");
                     if ( whosturn === playerusername) {
                         if (gameBoard[row][col] === '') {
                         gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
@@ -508,20 +523,21 @@
                         prevGameBoard = gameBoard.map(row => row.slice());
 
                         if (checkWin()) {
-                            alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
+                            //alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
+                            //alert(whosturn + " Won the game !")
                             setwinner();
                         } else if (checkDraw()) {
-                            alert('It\'s a draw!');
+                            //alert('It\'s a draw!');
                             setdraw();
                         } else {
                             nextplayerturn=switchPlayer();
                         }
                     } else {
-                        alert('Cell already taken! Choose another.');
+                        alert('Cell already taken! Choose another one.');
                     }
                     }
                     else{
-                        alert("this cell is not your's to take")
+                        alert("It's not your turn Kido !");
                     }
 
 
@@ -557,11 +573,11 @@
                         if (response.cellValue !== undefined) {
                             cellValue = response.cellValue;
                         } else {
-                            alert('Error fetching cell value from the database. Please try again.');
+                            console.log('Error fetching cell value from the database. Please try again.');
                         }
                     },
                     error: function () {
-                        alert('Error fetching cell value from the database. Please try again.');
+                       console.log('Error fetching cell value from the database. Please try again.');
                     },
                 });
 
@@ -572,7 +588,7 @@
                 const surrender = '{% url "surrender" game_idcode=game_idcode %}'; //nom de la bonne view
                 const surrenderurl = `${surrender}?game_idcode=${gameId}`; //url a modifier
                 const username = '{{ user.username}}' ;
-              console.log(username);
+              //console.log(username);
                 $.ajax({
                     url: surrenderurl,
                     method: 'POST',
@@ -589,12 +605,12 @@
 
 
                         } else {
-                            alert(error + ' test error')
+                            console.log(error + ' test error')
                             return "error";
                         }
                     },
                     error: function () {
-                        alert('ERROR check turn');
+                        console.log('ERROR check turn');
                         //whosturn = "error";
                     },
                 });
