@@ -18,17 +18,17 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            # Save the user
+
             user = form.save()
 
-            # Log in the user
+
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')  # Assuming you have password fields in your form
+            password = form.cleaned_data.get('password1')
             user = authenticate(request, username=username, password=password)
             login(request, user)
 
             messages.success(request, f'Account created successfully. You are now logged in.')
-            return redirect('morpion-home')
+            return redirect('profile')
     else:
         form = UserRegisterForm()
 
@@ -82,7 +82,7 @@ def profile(request):
             'id_code': game.id_code,
             'grid_x': game.grid_x,
             'grid_y': game.grid_y,
-            'winner': getattr(game.winner, 'username', None),
+            'winner': getattr(game.winner, 'username', "None"),
             'game_date': game.game_date.strftime('%Y-%m-%d'),
         }
         for game in filtered_games

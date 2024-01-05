@@ -45,6 +45,11 @@
                         Ratio : {{ ratio|floatformat:1}}
                     </p>
                 </article>
+            <article class="User-Data">
+                    <p class="user-data-text">Game Played: {{ user.profile.user_gameplayed }}</p>
+                    <p class="user-data-text">Game Won: {{ user.profile.user_game_won }}</p>
+
+                </article>
                 <article class="LastGamePlayed">
                     {% for game in last_3_games %}
                         {% if game.winner == user.username %}
