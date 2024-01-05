@@ -129,7 +129,7 @@ def filter_games(request):
                     'grid_y': game.grid_y,
                     'winner': getattr(game.winner, 'username', None),
                     'game_date': game.game_date.strftime('%Y-%m-%d'),
-                    'winner_image': game.winner.profile.image.path,
+                    #'winner_image': game.winner.profile.image.path,
                 }
                 for game in filtered_games
             ]
