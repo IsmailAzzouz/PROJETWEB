@@ -272,19 +272,24 @@ const changeusersymbol = (value) => {
 
         // Loop through response.games
         $.each(response.games, function (index, game) {
+            console.log(game.winner);
             resultContainer.append('<p>ID Code: ' + game.id_code + ', Winner: ' + game.winner + ', Date: ' + game.game_date + '</p>');
 
             // Check if the game winner is the user
-            if (game.winner === '{{ user.username }}') {
+            /*if (game.winner === '{{ user.username }}') {
                 cpt++;
-
+                winnerList[game.winner]++;
                 // Update or add winner to the winnerList
-                if (winnerList.hasOwnProperty(game.winner)) {
+            } else */if (winnerList.hasOwnProperty(game.winner)) {
                     winnerList[game.winner]++;
+
                 } else {
                     winnerList[game.winner] = 1;
                 }
-            }
+                if (game.winner === '{{ user.username }}') {
+                        cpt++;
+                        console.log(cpt + game.winner + " hehe boy");
+                    }
         });
 
         // Update the player score display
@@ -295,7 +300,7 @@ const changeusersymbol = (value) => {
         let sortedWinners = Object.keys(winnerList).sort(function (a, b) {
             return winnerList[b] - winnerList[a];
         });
-
+        console.log(winnerList);
         let userRank = sortedWinners.indexOf('{{ user.username }}') + 1;
         if(sortedWinners.length>100){
             playerscoredisplay.innerHTML += "<br>Rank: " + userRank + " out of " + sortedWinners.length;

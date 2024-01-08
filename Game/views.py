@@ -195,7 +195,7 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
         "Neon": "/media/PlayersIcon/NEON/NEON_CROSS_ICON.PNG",
         "3Dshaped": "/media/PlayersIcon/3DSHAPED/3DSHAPED_CROSS_ICON.PNG",
         "Green": "/media/PlayersIcon/GREEN/GREEN_CROSS_ICON.PNG",
-        "Pastel": "/media/PlayersIcon/PASTEL/PASTEL_CROSS_ICON.PNG",
+        "Pastel": "/media/PlayersIcon/PASTEL/PASTEL_X_ICON.PNG",
     }
     player2_symbol_mapping = {
         "Lila": "/media/PlayersIcon/LILA/LILA_CIRCLE_ICON.PNG",
@@ -255,31 +255,9 @@ def handle_player_move(request, game_id):
         return JsonResponse({'validMove': False, 'error': 'Invalid request method'})
 
 
-def check_winner(board):
-    # Check rows
-    for row in board:
-        if all(cell == row[0] and cell != '' for cell in row):
-            return int(row[0])  # Player number who won
-
-    # Check columns
-    for col in range(len(board[0])):
-        if all(row[col] == board[0][col] and board[0][col] != '' for row in board):
-            return int(board[0][col])  # Player number who won
-
-    # Check diagonals
-    if all(board[i][i] == board[0][0] and board[0][0] != '' for i in range(len(board))):
-        return int(board[0][0])  # Player number who won
-
-    if all(board[i][len(board) - 1 - i] == board[0][len(board) - 1] and board[0][len(board) - 1] != '' for i in
-           range(len(board))):
-        return int(board[0][len(board) - 1])  # Player number who won
-
-    return None  # No winner
 
 
-def check_draw(board):
-    # Check if there are any empty cells left
-    return all(cell != '' for row in board for cell in row)
+
 
 
 def play(request):
