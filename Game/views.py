@@ -1,18 +1,13 @@
 # views.py
 from django.contrib.auth.models import User
 from django.db.models import Count, F
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render
 from django.shortcuts import HttpResponse, get_object_or_404
-
 from users.models import Profile
-from . import models
 from .forms import GameForm, JoinGameForm
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_GET, require_POST
-
 from .models import Game, Cell, Grid
-from .models import Cell
 from django.db.models import Q
 from django.http import JsonResponse
 
@@ -223,36 +218,6 @@ def game_scene(request, player_1, player_2, game_idcode, game_private):
     })
 
 
-def handle_player_move(request, game_id):
-    if request.method == 'POST':
-        row = int(request.POST.get('row'))
-        col = int(request.POST.get('col'))
-        player = int(request.POST.get('player'))
-
-        # Look up the game in the database based on game_id
-        game = get_object_or_404(Game, id=game_id)
-
-        # Check if it's the correct player's turn
-        if game.current_player != player:
-            return JsonResponse({'validMove': False, 'error': 'It\'s not your turn.'})
-
-        # Check if the cell is empty
-        if game.board[row][col] != '':
-            return JsonResponse({'validMove': False, 'error': 'Cell already taken.'})
-
-        # Update the game state (this is a simplified example)
-        game.board[row][col] = 'X' if player == 1 else 'O'
-        game.current_player = 3 - player  # Toggle between 1 and 2
-
-        # Check for a winner or draw (you need to implement this logic based on your game rules)
-        winner = check_winner(game.board)
-        draw = check_draw(game.board)
-
-        game.save()
-
-        return JsonResponse({'validMove': True, 'winner': winner, 'draw': draw})
-    else:
-        return JsonResponse({'validMove': False, 'error': 'Invalid request method'})
 
 
 

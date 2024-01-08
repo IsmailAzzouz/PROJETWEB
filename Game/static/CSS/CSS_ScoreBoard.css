@@ -5,7 +5,10 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Hide overflow content */
+    overflow: hidden;
+}
+body{
+    overflow: auto;
 }
 
 .scoreboard-table {
@@ -15,8 +18,8 @@
     margin-top: 20px;
     background: rgba(74, 32, 107, 0.65);
     border-radius: 10px;
-    overflow: auto; /* Make the table scrollable */
-    max-height: 400px; /* Set the maximum height as needed */
+    overflow: auto;
+    max-height: 400px;
     table-layout: fixed;
     margin: 0 auto;
 }
@@ -66,7 +69,7 @@
     color: #fff;
     border: none;
     border-radius: 5px;
-    outline: none; /* Remove button outline on click */
+    outline: none;
 }
 
 .pagination button:disabled {
@@ -82,7 +85,7 @@
     font-size: 16px;
 }
 
-/* Optional: Add some styles to highlight the matched results */
+
 .scoreboard-table tr.matched {
-    background-color: #f0f8ff; /* Light blue background for matched rows */
+    background-color: #f0f8ff;
 }

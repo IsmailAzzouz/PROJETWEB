@@ -9,14 +9,14 @@
     PROFILE
 {% endblock %}
 {% block JS %}
-    <!-- Include Chart.js -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
 {% endblock %}
 {% block content %}
-    <!-- Include Chart.js -->
+
 
     <div class="Global-Frame">
         <div class="Left-Subsection">
@@ -119,13 +119,13 @@
                         >Username:</label
                         >
                         {{ user_form.as_p }}
-                        <!-- Repeat for other form fields -->
+
 
                         <label for="{{ profile_form.image.id_for_label }}"
                         >Profile Picture:</label
                         >
                         {{ profile_form.as_p }}
-                        <!-- Repeat for other profile form fields -->
+
                     </fieldset>
 
                     <footer class="form-button">
@@ -275,12 +275,7 @@ const changeusersymbol = (value) => {
             console.log(game.winner);
             resultContainer.append('<p>ID Code: ' + game.id_code + ', Winner: ' + game.winner + ', Date: ' + game.game_date + '</p>');
 
-            // Check if the game winner is the user
-            /*if (game.winner === '{{ user.username }}') {
-                cpt++;
-                winnerList[game.winner]++;
-                // Update or add winner to the winnerList
-            } else */if (winnerList.hasOwnProperty(game.winner)) {
+           if (winnerList.hasOwnProperty(game.winner)) {
                     winnerList[game.winner]++;
 
                 } else {
@@ -386,7 +381,7 @@ const changeusersymbol = (value) => {
             });
         });
 
-        // Your JavaScript code here
+
 
 
     </script>

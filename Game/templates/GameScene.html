@@ -10,10 +10,10 @@
   width: fit-content;
   height: fit-content;
   aspect-ratio: 1/1;
-  transform: scale(0.025);
+
 
   }
-  /* Updated CSS for the modal */
+
   .modal {
     display: none;
     position: fixed;
@@ -27,20 +27,20 @@
   }
 
   .modal-content {
-    background-color: #6a5acd; /* Purple background color */
+    background-color: #6a5acd;
     margin: auto;
-    margin-top: 15%; /* Adjust the margin-top to vertically center the modal */
+    margin-top: 15%;
     padding: 20px;
     border: 1px solid #888;
-    width: 300px; /* Adjust the width as needed */
-    border-radius: 10px; /* Rounded corners */
+    width: 300px;
+    border-radius: 10px;
     text-align: center;
-    color: #fff; /* White text color */
-    position: relative; /* Added for centering */
+    color: #fff;
+    position: relative;
   }
 
   .close {
-    color: #fff; /* White text color */
+    color: #fff;
     position: absolute;
     top: 10px;
     right: 10px;
@@ -50,8 +50,8 @@
   }
 
   .button {
-    background-color: #fff; /* White button background color */
-    color: #6a5acd; /* Purple button text color */
+    background-color: #fff;
+    color: #6a5acd;
     padding: 10px 20px;
     margin-top: 15px;
     border: none;
@@ -63,7 +63,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: fit-content; /* Set the height of the container, adjust as needed */
+    height: fit-content;
     margin: 50px;
   }
 
@@ -144,11 +144,12 @@ justify-content: center;
 
 
 }
-/*.GridCell img{
-padding-right: 443px;
+.GridCell img{
+
 width: fit-content;
 height:fit-content ;
-}*/
+transform: scale(0.15);
+}
 </style>
 {% endblock %} {% block title %}PLAYING{% endblock %} {% block JS %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -157,24 +158,13 @@ height:fit-content ;
               let gridX = {{ game_x }};
             let gridY = {{ game_y }};
             let gameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
-            //let prevGameBoard = Array.from({ length: gridX }, () => Array(gridY).fill(''));
+
             let currentPlayer = "{{current_user_role}}" === "Player 1" ? "0" : "1";
             const gameId = '{{ game_idcode }}';
             const playerusername = '{{user.username}}';
             let nextplayerturn='{{player_1}}';
             let whosturn= '{{player_1}}';
-            //alert("test");
-            /*function areGridsEqual(grid1, grid2) {
-                for (let i = 0; i < gridX; i++) {
-                    for (let j = 0; j < gridY; j++) {
-                        if (grid1[i][j] !== grid2[i][j]) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-        */
+
             function updateCellInDatabase(row, col, symbol) {
                 const csrfToken = '{{ csrf_token }}';
                 const updateCellUrl = '{% url "update_cell_in_database" game_idcode=game_idcode %}';
@@ -191,7 +181,7 @@ height:fit-content ;
                         game_idcode: gameId,
                     },
                     success: function (response) {
-                        // Handle the server response as needed
+
                     },
                     error: function () {
                         console.log('Error updating the cell in the database. Please try again.');
@@ -200,109 +190,110 @@ height:fit-content ;
             }
 
             function updateGrid() {
-                var imgele;
-                for (let i = 0; i < gridX; i++) {
-                    for (let j = 0; j < gridY; j++) {
-                        const cellValue = getCellValueFromDatabase(i, j);
-                        const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
+    var imgele;
+    for (let i = 0; i < gridX; i++) {
+        for (let j = 0; j < gridY; j++) {
+            const cellValue = getCellValueFromDatabase(i, j);
+            const cellElement = $(`[data-row="${i}"][data-col="${j}"]`);
 
-                        if (cellValue === -1 || cellValue === '') {
-                            cellElement.text('');
-                        } else {
-                            let value = cellValue === '0' ? 'X' : 'O';
-                            cellElement.text(value);
-                            if(cellValue==="0"){
-                            imgele = $('<img>').attr("src", '{{ player_1_symbol }}');
-                            }
-                            else{
-                                imgele = $('<img>').attr("src", '{{ player_2_symbol }}');
-                            }
-                            $(cellElement).append(imgele); /****************************************ICICICICICICICICI*/////////////////////////////
-                            gameBoard[i][j] = value;
-                        }
+
+            if (!cellElement.find('img').length) {
+                if (cellValue === -1 || cellValue === '') {
+
+                } else {
+                    let value = cellValue === '0' ? 'X' : 'O';
+
+                    if (cellValue === "0") {
+                        imgele = $('<img>').attr("src", '{{ player_1_symbol }}');
+                    } else {
+                        imgele = $('<img>').attr("src", '{{ player_2_symbol }}');
                     }
+                    $(cellElement).append(imgele);
+                    gameBoard[i][j] = value;
                 }
             }
-
-             function checkWin() {
-
-        if (gridX === gridY && gridX === game_alignement) {
-
-            for (let i = 0; i < gridX; i++) {
-                if (
-                    gameBoard[i][0] !== '' &&
-                    gameBoard[i].every((cell) => cell === gameBoard[i][0])
-                ) {
-                    return true;
-                }
-            }
-
-            for (let i = 0; i < gridY; i++) {
-                if (
-                    gameBoard[0][i] !== '' &&
-                    gameBoard.every((row) => row[i] === gameBoard[0][i])
-                ) {
-                    return true;
-                }
-            }
-
-            if (
-                gameBoard[0][0] !== '' &&
-                gameBoard.every((row, index) => row[index] === gameBoard[0][0])
-            ) {
-                return true;
-            }
-
-            if (
-                gameBoard[0][gridY - 1] !== '' &&
-                gameBoard.every(
-                    (row, index) => row[gridY - 1 - index] === gameBoard[0][gridY - 1]
-                )
-            ) {
-                return true;
-            }
-        } else {
-
-            for (let i = 0; i < game_alignement; i++) {
-                if (
-                    gameBoard[i][0] !== '' &&
-                    gameBoard[i].slice(0, game_alignement).every((cell) => cell === gameBoard[i][0])
-                ) {
-                    return true;
-                }
-            }
-
-
-            for (let i = 0; i < game_alignement; i++) {
-                if (
-                    gameBoard[0][i] !== '' &&
-                    gameBoard.slice(0, game_alignement).every((row) => row.slice(0, game_alignement)[i] === gameBoard[0][i])
-                ) {
-                    return true;
-                }
-            }
-
-
-            if (
-                gameBoard[0][0] !== '' &&
-                gameBoard.slice(0, game_alignement).every((row, index) => row.slice(0, game_alignement)[index] === gameBoard[0][0])
-            ) {
-                return true;
-            }
-
-            if (
-                gameBoard[0][game_alignement - 1] !== '' &&
-                gameBoard.slice(0, game_alignement).every(
-                    (row, index) => row.slice(0, game_alignement)[game_alignement - 1 - index] === gameBoard[0][game_alignement - 1]
-                )
-            ) {
-                return true;
-            }
-
         }
-
-        return false;
     }
+}
+
+
+            function checkWin() {
+    // Check horizontal and vertical alignments
+    for (let i = 0; i < gridX; i++) {
+        if (
+            gameBoard[i][0] !== '' &&
+            gameBoard[i].slice(0, game_alignement).every((cell) => cell === gameBoard[i][0])
+        ) {
+            return true;
+        }
+    }
+
+    for (let i = 0; i < gridY; i++) {
+        if (
+            gameBoard[0][i] !== '' &&
+            gameBoard.slice(0, game_alignement).every((row) => row.slice(0, game_alignement)[i] === gameBoard[0][i])
+        ) {
+            return true;
+        }
+    }
+
+    // Check main diagonal
+    if (
+        gameBoard[0][0] !== '' &&
+        gameBoard.slice(0, game_alignement).every((row, index) => row.slice(0, game_alignement)[index] === gameBoard[0][0])
+    ) {
+        return true;
+    }
+
+    // Check anti-diagonal
+    if (
+        gameBoard[0][gridY - 1] !== '' &&
+        gameBoard.slice(0, game_alignement).every(
+            (row, index) => row.slice(0, game_alignement)[game_alignement - 1 - index] === gameBoard[0][gridY - 1]
+        )
+    ) {
+        return true;
+    }
+
+    // Check vertical and horizontal alignments for reversed direction
+    for (let i = 0; i < game_alignement; i++) {
+        if (
+            gameBoard[i][0] !== '' &&
+            gameBoard[i].slice(gridY - game_alignement).every((cell) => cell === gameBoard[i][0])
+        ) {
+            return true;
+        }
+    }
+
+    for (let i = 0; i < game_alignement; i++) {
+        if (
+            gameBoard[0][i] !== '' &&
+            gameBoard.slice(gridX - game_alignement).every((row) => row.slice(0, game_alignement)[i] === gameBoard[0][i])
+        ) {
+            return true;
+        }
+    }
+
+    // Check main diagonal for reversed direction
+    if (
+        gameBoard[gridX - 1][gridY - 1] !== '' &&
+        gameBoard.slice(gridX - game_alignement).every((row, index) => row.slice(gridY - game_alignement)[index] === gameBoard[gridX - 1][gridY - 1])
+    ) {
+        return true;
+    }
+
+    // Check anti-diagonal for reversed direction
+    if (
+        gameBoard[gridX - 1][0] !== '' &&
+        gameBoard.slice(gridX - game_alignement).every(
+            (row, index) => row.slice(0, game_alignement)[game_alignement - 1 - index] === gameBoard[gridX - 1][0]
+        )
+    ) {
+        return true;
+    }
+
+    return false;
+}
 
             function checkDraw() {
                 return gameBoard.every((row) => row.every((cell) => cell !== ''));
@@ -493,16 +484,16 @@ height:fit-content ;
                             let cellValue = getCellValueFromDatabase(i, j);
 
                             if (cellValue === -1 || cellValue === '') {
-                                newCell.text('');
+
                             } else {
-                                let value = cellValue === '0' ? 'X' : 'O';/***** ici quand on cree grid***************/
+                                let value = cellValue === '0' ? 'X' : 'O';
                                 if(cellValue==="0"){
                                 imgele = $('<img>').attr("src", '{{ player_1_symbol }}');
                                 }
                                 else{
                                 imgele = $('<img>').attr("src", '{{ player_2_symbol }}');
                                 }
-                                newCell.text(value);
+
                             $(newCell).append(imgele);
                                 gameBoard[i][j]=value;
                             }
@@ -511,10 +502,11 @@ height:fit-content ;
                 }
                 createGrid();
                 $('#GameGrid').on('click', '.GridCell', function () {
-                    const row = parseInt($(this).attr('data-row'));
-                    const col = parseInt($(this).attr('data-col'));
+                    const $this = $(this);
+const row = parseInt($this.attr('data-row'));
+const col = parseInt($this.attr('data-col'));
 
-                    //console.log(whosturn + " test");
+
                     if ( whosturn === playerusername) {
                         if (gameBoard[row][col] === '') {
                         gameBoard[row][col] = currentPlayer === '0' ? 'X' : 'O';
@@ -524,11 +516,10 @@ height:fit-content ;
                         prevGameBoard = gameBoard.map(row => row.slice());
 
                         if (checkWin()) {
-                            //alert(`Player ${currentPlayer === '0' ? '1' : '2'} wins!`);
-                            //alert(whosturn + " Won the game !")
+
                             setwinner();
                         } else if (checkDraw()) {
-                            //alert('It\'s a draw!');
+
                             setdraw();
                         } else {
                             nextplayerturn=switchPlayer();
@@ -544,12 +535,15 @@ height:fit-content ;
 
                 });
 
-                function refreshGrid() {
-                    createGrid();
-                    updateGrid();
-                    checkturn();
-                    checkwinner()
-                }
+                var clicking = false;
+
+function refreshGrid() {
+    if (!clicking) {
+        updateGrid();
+        checkturn();
+        checkwinner();
+    }
+}
 
                 setInterval(refreshGrid, 550);
             });
@@ -629,7 +623,14 @@ height:fit-content ;
     // Replace 'your_destination_page' with the actual URL or route
     window.location.href = '{% url "morpion-home" %}';
   }
+document.addEventListener('click', function() {
+    clicking = true;
+console.log("clik");
+    // Your click handling code goes here
 
+    // After handling the click, set clicking back to false
+    clicking = false;
+});
 </script>
 
 {% endblock %} {% block content %}

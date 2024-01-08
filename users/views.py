@@ -53,19 +53,20 @@ def profile(request):
     filtered_games = Game.objects.filter(
         (Q(player_1__username=request.user.username) | Q(player_2__username=request.user.username)),
         isfinished=True,
-    )
+    ).order_by('game_date').reverse()  # Order the games by date in ascending order
+
     last_3_games_data = [
         {
-            'id_code': last_game.id_code,
-            'grid_x': last_game.grid_x,
-            'grid_y': last_game.grid_y,
-            'player_1': last_game.player_1,
-            'player_2': last_game.player_2,
-            'alignement': last_game.alignment,
-            'winner': getattr(last_game.winner, 'username', None),
-            'game_date': last_game.game_date.strftime('%Y-%m-%d'),
+            'id_code': game.id_code,
+            'grid_x': game.grid_x,
+            'grid_y': game.grid_y,
+            'player_1': game.player_1,
+            'player_2': game.player_2,
+            'alignement': game.alignment,
+            'winner': getattr(game.winner, 'username', None),
+            'game_date': game.game_date.strftime('%Y-%m-%d'),
         }
-        for last_game in filtered_games[:3]
+        for game in filtered_games[:3]  # Get the first three games
     ]
     user_username = request.user.username
     one_week_ago = datetime.now() - timedelta(weeks=1)
